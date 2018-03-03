@@ -181,7 +181,7 @@ class ConditionToken extends BaseToken
                 }
             }
         } else {
-            throw new ElementNotFoundException("The \"condition\" element must have at least one if statement.");
+            throw new ElementNotFoundException("The \"b:condition\" element must have at least one if statement.");
         }
     }
 
