@@ -7,7 +7,7 @@
 [ ] Functions
 [ ] Data context
 [x] Query resolver
-[ ] DataTable
+[x] DataTable
 [ ] SelectItemsList (KeyValuePair[])
 [x] Conditions (if/elseif/else)
 [x] Loops (foreach)
