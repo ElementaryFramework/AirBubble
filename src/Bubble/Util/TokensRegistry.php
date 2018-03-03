@@ -32,6 +32,7 @@ use Bubble\Tokens\TextToken;
 use Bubble\Tokens\InputLabelToken;
 use Bubble\Tokens\ConditionToken;
 use Bubble\Tokens\ForeachToken;
+use Bubble\Tokens\DataTableToken;
 
 /**
  * Template tokens registry
@@ -59,7 +60,8 @@ class TokensRegistry
         "b:text"       => TextToken::class,
         "b:inputLabel" => InputLabelToken::class,
         "b:condition"  => ConditionToken::class,
-        "b:foreach"    => ForeachToken::class
+        "b:foreach"    => ForeachToken::class,
+        "b:dataTable"  => DataTableToken::class
     );
 
     /**
