@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ platforms
+.idea/
+
+# PHP Code Sniffer config
+.php_cs
+
+# Composer files and dependencies
+vendor/
+composer.lock
+
+# Test folders
+tests/
+/src/Bubble/bubble.xsd
