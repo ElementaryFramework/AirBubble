@@ -173,7 +173,7 @@ class Template implements IParser, IRenderer
             if ($token->getType() === PRE_PARSE_TOKEN || $token->getType() === ALL_STATE_PARSE_TOKEN) {
                 $token->parse();
 
-                $found = $token->getType() === PRE_PARSE_TOKEN;
+                $found = !$found ? $token->getType() === PRE_PARSE_TOKEN : $found;
 
                 $res = $token->render();
                 if ($res === null) {
@@ -219,7 +219,7 @@ class Template implements IParser, IRenderer
             if ($token->getType() === POST_PARSE_TOKEN || $token->getType() === ALL_STATE_PARSE_TOKEN) {
                 $token->parse();
 
-                $found = $token->getType() == POST_PARSE_TOKEN;
+                $found = !$found ? $token->getType() === POST_PARSE_TOKEN : $found;
 
                 $res = $token->render();
                 if ($res === null) {
