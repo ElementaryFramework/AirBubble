@@ -93,7 +93,7 @@ class FunctionsContext
      * @param string $val   The string to spacify
      * @param string $space The string to inject
      *
-     * @return void
+     * @return string
      */
     public function spacify(string $var, string $space = " ")
     {
@@ -107,10 +107,44 @@ class FunctionsContext
      * @param string $var   The string to strip
      * @param string $space The string to inject
      *
-     * @return void
+     * @return string
      */
     public function strip(string $var, string $space = " ")
     {
         return preg_replace("#( +|\\t+|\\n+|\\r)#", $space, $var);
+    }
+
+    /**
+     * Truncates a string to the given length.
+     *
+     * @param string  $var         The string to truncate.
+     * @param integer $length      The length.
+     * @param string  $trunk       The string to insert at the end.
+     * @param boolean $trunkWord   Define if we break words (false) or not (true).
+     * @param boolean $trunkMiddle Define if we truncate at the middle of the string (true) or not (false).
+     *
+     * @return string
+     */
+    public function truncate(string $var, int $length = 80, string $trunk = "...", bool $trunkWord = false, bool $trunkMiddle = false)
+    {
+        if ($length === 0) {
+            return "";
+        }
+
+        if (isset($var[ $length ])) {
+            $length -= min($length, strlen($trunk));
+
+            if ($trunkWord && !$trunkMiddle) {
+                $var = preg_replace("/\s+?(\S+)?$/", "", substr($var, 0, $length + 1));
+            }
+
+            if (!$trunkMiddle) {
+                return substr($var, 0, $length) . $trunk;
+            }
+
+            return substr($var, 0, $length / 2) . $trunk . substr($var, - $length / 2);
+        }
+
+        return $var;
     }
 }
