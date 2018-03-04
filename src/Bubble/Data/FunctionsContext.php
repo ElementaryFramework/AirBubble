@@ -74,7 +74,7 @@ class FunctionsContext
         );
     }
 
-        /**
+    /**
      * Changes a string to uppercase
      *
      * @param string $var The string to change
@@ -84,5 +84,19 @@ class FunctionsContext
     public function capitalize(string $var)
     {
         return ucfirst($var);
+    }
+
+    /**
+     * Insert space (or optionally a given string)
+     * between all characters of the string.
+     *
+     * @param string $val   The string to spacify
+     * @param string $space The string to inject
+     *
+     * @return void
+     */
+    public function spacify(string $var, string $space = " ")
+    {
+        return implode($space, str_split($var));
     }
 }
