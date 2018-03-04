@@ -34,6 +34,7 @@ use Bubble\Data\DataResolver;
 use Bubble\Util\Utilities;
 use Bubble\Parser\IParser;
 use Bubble\Tokens\ConditionToken;
+use Bubble\Util\EvalSandBox;
 
 /**
  * Template file
@@ -259,8 +260,7 @@ class Template implements IParser, IRenderer
         }, $this->_templateString);
 
         $this->_templateString = preg_replace_callback(self::EXPRESSION_REGEX, function ($m) {
-            // TODO: Use EvalContext instead
-            $res = eval("return {$m[1]};");
+            $res = EvalSandBox::eval($m[1]);
             return Utilities::toString($res);
         }, $this->_templateString);
 
