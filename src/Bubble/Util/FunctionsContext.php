@@ -42,5 +42,19 @@ namespace Bubble\Util;
  */
 class FunctionsContext
 {
-
+    /**
+     * Changes a string to uppercase
+     *
+     * @param string $var The string to change
+     *
+     * @return string
+     */
+    public function upper(string $var)
+    {
+        return str_replace(
+            str_split("abcdefghijklmnopqrstuvwxyz"),
+            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+            $var
+        );
+    }
 }
