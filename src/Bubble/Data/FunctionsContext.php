@@ -99,4 +99,18 @@ class FunctionsContext
     {
         return implode($space, str_split($var));
     }
+
+    /**
+     * Replaces multiple spaces, new lines and tabulations
+     * by a space (or optionally a given string).
+     *
+     * @param string $var   The string to strip
+     * @param string $space The string to inject
+     *
+     * @return void
+     */
+    public function strip(string $var, string $space = " ")
+    {
+        return preg_replace("#( +|\\t+|\\n+|\\r)#", $space, $var);
+    }
 }
