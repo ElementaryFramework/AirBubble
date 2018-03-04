@@ -81,10 +81,11 @@ class EvalSandBox
 
     private static function _parseCode(string $code): string
     {
-        return preg_replace_callback("#@(\w+)\\(.+\\)#U", function ($m) {
+        return preg_replace_callback("#@(\w+)\\(#U", function ($m) {
             if (!method_exists(self::$_functionContext, $m[1])) {
                 throw new UnknownFunctionException($m[1]);
             }
+
             return str_replace("@{$m[1]}(", "\$context->{$m[1]}(", $m[0]);
         }, $code);
     }
