@@ -60,9 +60,9 @@ class EvalSandBox
      */
     public static function setFunctionsContext(string $context): void
     {
-        if (!is_subclass_of($context, "\Bubble\Util\FunctionsContext")) {
+        if (!is_subclass_of($context, "\Bubble\Data\FunctionsContext")) {
             throw new InvalidDataException(
-                "The given functions context is not a subclass of \Bubble\Util\FunctionsContext."
+                "The given functions context is not a subclass of \Bubble\Data\FunctionsContext."
             );
         }
 

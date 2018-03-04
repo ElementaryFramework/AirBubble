@@ -26,7 +26,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace Bubble\Util;
+namespace Bubble\Data;
 
 /**
  * Functions context
@@ -34,11 +34,11 @@ namespace Bubble\Util;
  * Store all Bubble template's functions
  * as methods.
  *
- * @category Util
+ * @category Data
  * @package  Bubble
  * @author   Axel Nana <ax.lnana@outlook.com>
  * @license  LGPL-3.0 <https://opensource.org/licenses/LGPL-3.0>
- * @link     http://bubble.na2axl.tk/docs/api/Bubble/Util/FunctionsContext
+ * @link     http://bubble.na2axl.tk/docs/api/Bubble/Data/FunctionsContext
  */
 class FunctionsContext
 {
@@ -56,5 +56,33 @@ class FunctionsContext
             str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
             $var
         );
+    }
+
+    /**
+     * Changes a string to lowercase
+     *
+     * @param string $var The string to change
+     *
+     * @return string
+     */
+    public function lower(string $var)
+    {
+        return str_replace(
+            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+            str_split("abcdefghijklmnopqrstuvwxyz"),
+            $var
+        );
+    }
+
+        /**
+     * Changes a string to uppercase
+     *
+     * @param string $var The string to change
+     *
+     * @return string
+     */
+    public function capitalize(string $var)
+    {
+        return ucfirst($var);
     }
 }
