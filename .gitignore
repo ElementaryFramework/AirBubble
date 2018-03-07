@@ -14,6 +14,9 @@
 vendor/
 composer.lock
 
-# Test folders
+# Test files and folders
 tests/
 /src/Bubble/bubble.xsd
+
+# Docs (hidden for now)
+docs/
