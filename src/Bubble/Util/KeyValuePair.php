@@ -28,6 +28,8 @@
 
 namespace Bubble\Util;
 
+use Bubble\Data\IBubbleDataContext;
+
 /**
  * Key value pair
  *
@@ -39,7 +41,7 @@ namespace Bubble\Util;
  * @license  LGPL-3.0 <https://opensource.org/licenses/LGPL-3.0>
  * @link     http://bubble.na2axl.tk/docs/api/Bubble/Util/KeyValuePair
  */
-class KeyValuePair
+class KeyValuePair implements IBubbleDataContext
 {
     /**
      * Data key.
@@ -64,7 +66,7 @@ class KeyValuePair
     /**
      * Gets the data key.
      *
-     * @return void
+     * @return string
      */
     public function getKey()
     {
