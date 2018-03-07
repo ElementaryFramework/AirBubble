@@ -28,15 +28,15 @@
 
 namespace Bubble\Tokens;
 
-use Bubble\Parser\AttributesList;
-use Bubble\Attributes\ValueAttribute;
-use Bubble\Exception\UnexpectedTokenException;
-use Bubble\Exception\ElementNotFoundException;
-use Bubble\Attributes\VarAttribute;
 use Bubble\Attributes\KeyAttribute;
+use Bubble\Attributes\ValueAttribute;
+use Bubble\Attributes\VarAttribute;
+use Bubble\Exception\ElementNotFoundException;
+use Bubble\Exception\InvalidDataException;
+use Bubble\Exception\UnexpectedTokenException;
+use Bubble\Parser\AttributesList;
 use Bubble\Renderer\Template;
 use Bubble\Util\Utilities;
-use Bubble\Exception\InvalidDataException;
 
 /**
  * Foreach Token
@@ -179,7 +179,7 @@ class ForeachToken extends BaseToken
     }
 
     /**
-     * Parses attributes
+     * @inheritdoc
      *
      * @throws UnexpectedTokenException
      */
