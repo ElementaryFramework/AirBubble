@@ -76,8 +76,8 @@ class TokensRegistry
      *
      * @example <code>TokensRegistry::add("b:myTag", MyTagToken::class)</code>
      *
-     * @param string $elementName The name
-     * @param $elementClass
+     * @param string $elementName The token's name
+     * @param string $elementClass The class' name
      *
      * @return void
      */
