@@ -39,6 +39,7 @@ use Bubble\Attributes\VarAttribute;
 use Bubble\Attributes\KeyAttribute;
 use Bubble\Renderer\Template;
 use Bubble\Util\Utilities;
+use Bubble\Exception\InvalidDataException;
 
 /**
  * Foreach Token
@@ -81,7 +82,9 @@ class ForeachToken extends BaseToken
                         break;
 
                     default:
-                        throw new UnexpectedTokenException("The \"b:foreach\" loop can only have value, var or key for attributes.");
+                        throw new UnexpectedTokenException(
+                            "The \"b:foreach\" loop can only have \"value\", \"var\" or \"key\" for attributes."
+                        );
                 }
             }
         }
@@ -161,19 +164,18 @@ class ForeachToken extends BaseToken
         }
 
         if ($itemVar === null) {
-            throw new ElementNotFoundException("The var attribute is required in foreach loop.");
+            throw new ElementNotFoundException("The \"var\" attribute is required in foreach loop.");
         }
 
         if ($iterator === null) {
-            throw new ElementNotFoundException("The value attribute is required in foreach loop.");
+            throw new ElementNotFoundException("The \"value\" attribute is required in foreach loop.");
         }
 
         $iterator = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $iterator);
         $data = $this->_template->getResolver()->resolve($iterator);
 
         if (!is_iterable($data)) {
-            // TODO: Create an exception for this
-            throw new \Exception("Non-iterable data provided to a foreach loop.");
+            throw new InvalidDataException("Non-iterable data provided to a foreach loop.");
         }
 
         $innerHTML = Utilities::innerHTML($this->_element);
@@ -181,9 +183,13 @@ class ForeachToken extends BaseToken
         $domElement = $this->_document->createElement("b:outputWrapper", "");
 
         foreach ($data as $k => $v) {
-            $iterationHTML = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
-            }, $innerHTML);
+            $iterationHTML = preg_replace_callback(
+                Template::DATA_MODEL_QUERY_REGEX,
+                function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
+                    return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
+                },
+                $innerHTML
+            );
 
             if ($itemKey !== null) {
                 $iterationHTML = preg_replace("#\\\$\\{{$itemKey}\\}#U", $k, $iterationHTML);
