@@ -31,7 +31,6 @@ namespace Bubble\Tokens;
 use Bubble\Parser\AttributesList;
 use Bubble\Renderer\Template;
 
-
 /**
  * Base Token
  *
@@ -83,7 +82,7 @@ abstract class BaseToken implements IToken
     /**
      * Token constructor
      *
-     * @param \DOMElement  $element
+     * @param \DOMElement $element
      * @param \DOMDocument $document
      */
     public function __construct(\DOMElement $element, \DOMDocument &$document)
@@ -96,12 +95,23 @@ abstract class BaseToken implements IToken
         $this->_parseAttributes();
     }
 
+    /**
+     * Parses attributes for this element.
+     *
+     * @return mixed
+     */
+    abstract protected function _parseAttributes();
+
+    /**
+     * Changes the template file in which this
+     * token have to be rendered.
+     *
+     * @param Template $template The template file to use.
+     */
     public function setTemplate(Template &$template)
     {
         $this->_template = &$template;
     }
-
-    abstract protected function _parseAttributes();
 
     /**
      * Replaces the current token's element
