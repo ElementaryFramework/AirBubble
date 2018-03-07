@@ -28,11 +28,12 @@
 
 namespace Bubble\Util;
 
-use Bubble\Tokens\TextToken;
-use Bubble\Tokens\InputLabelToken;
 use Bubble\Tokens\ConditionToken;
-use Bubble\Tokens\ForeachToken;
 use Bubble\Tokens\DataTableToken;
+use Bubble\Tokens\ForeachToken;
+use Bubble\Tokens\InputLabelToken;
+use Bubble\Tokens\SelectItemsToken;
+use Bubble\Tokens\TextToken;
 
 /**
  * Template tokens registry
@@ -57,11 +58,12 @@ class TokensRegistry
      * @var array
      */
     private static $_registry = array(
-        "b:text"       => TextToken::class,
+        "b:text" => TextToken::class,
         "b:inputLabel" => InputLabelToken::class,
-        "b:condition"  => ConditionToken::class,
-        "b:foreach"    => ForeachToken::class,
-        "b:dataTable"  => DataTableToken::class
+        "b:condition" => ConditionToken::class,
+        "b:foreach" => ForeachToken::class,
+        "b:dataTable" => DataTableToken::class,
+        "b:selectItems" => SelectItemsToken::class
     );
 
     /**
