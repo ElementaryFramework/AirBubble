@@ -29,10 +29,7 @@
 namespace Bubble\Tokens;
 
 use Bubble\Parser\AttributesList;
-use Bubble\Attributes\ElementAttribute;
 use Bubble\Attributes\ValueAttribute;
-use Bubble\Attributes\GenericAttribute;
-use Bubble\Attributes\ConditionAttribute;
 use Bubble\Exception\UnexpectedTokenException;
 use Bubble\Exception\ElementNotFoundException;
 use Bubble\Attributes\VarAttribute;
@@ -63,32 +60,6 @@ class ForeachToken extends BaseToken
      * Token type.
      */
     public const TYPE = PRE_PARSE_TOKEN;
-
-    protected function _parseAttributes()
-    {
-        if ($this->_element->hasAttributes()) {
-            foreach ($this->_element->attributes as $attr) {
-                switch ($attr->nodeName) {
-                    case "key":
-                        $this->_attributes->add(new KeyAttribute($attr, $this->_document));
-                        break;
-
-                    case "var":
-                        $this->_attributes->add(new VarAttribute($attr, $this->_document));
-                        break;
-
-                    case "value":
-                        $this->_attributes->add(new ValueAttribute($attr, $this->_document));
-                        break;
-
-                    default:
-                        throw new UnexpectedTokenException(
-                            "The \"b:foreach\" loop can only have \"value\", \"var\" or \"key\" for attributes."
-                        );
-                }
-            }
-        }
-    }
 
     /**
      * Gets the type of this token.
@@ -146,6 +117,12 @@ class ForeachToken extends BaseToken
      * Render the token.
      *
      * @return \DOMNode|null
+     *
+     * @throws ElementNotFoundException
+     * @throws InvalidDataException
+     * @throws \Bubble\Exception\InvalidQueryException
+     * @throws \Bubble\Exception\KeyNotFoundException
+     * @throws \Bubble\Exception\PropertyNotFoundException
      */
     public function render(): ?\DOMNode
     {
@@ -186,18 +163,49 @@ class ForeachToken extends BaseToken
             $iterationHTML = preg_replace_callback(
                 Template::DATA_MODEL_QUERY_REGEX,
                 function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                    return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
+                    return str_replace($itemVar, "{$iterator}.{$k}", $m[0]);
                 },
                 $innerHTML
             );
 
             if ($itemKey !== null) {
-                $iterationHTML = preg_replace("#\\\$\\{{$itemKey}\\}#U", $k, $iterationHTML);
+                $iterationHTML = preg_replace("/\\\$\\{{$itemKey}\\}/U", $k, $iterationHTML);
             }
 
             Utilities::appendHTML($domElement, $iterationHTML);
         }
 
         return $domElement;
+    }
+
+    /**
+     * Parses attributes
+     *
+     * @throws UnexpectedTokenException
+     */
+    protected function _parseAttributes()
+    {
+        if ($this->_element->hasAttributes()) {
+            foreach ($this->_element->attributes as $attr) {
+                switch ($attr->nodeName) {
+                    case "key":
+                        $this->_attributes->add(new KeyAttribute($attr, $this->_document));
+                        break;
+
+                    case "var":
+                        $this->_attributes->add(new VarAttribute($attr, $this->_document));
+                        break;
+
+                    case "value":
+                        $this->_attributes->add(new ValueAttribute($attr, $this->_document));
+                        break;
+
+                    default:
+                        throw new UnexpectedTokenException(
+                            "The \"b:foreach\" loop can only have \"value\", \"var\" or \"key\" for attributes."
+                        );
+                }
+            }
+        }
     }
 }
