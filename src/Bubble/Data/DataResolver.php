@@ -31,7 +31,6 @@ namespace Bubble\Data;
 use Bubble\Exception\KeyNotFoundException;
 use Bubble\Exception\PropertyNotFoundException;
 use Bubble\Exception\InvalidQueryException;
-use Bubble\Util\Utilities;
 
 /**
  * Template data resolver
@@ -76,7 +75,13 @@ class DataResolver
     /**
      * Gets the data from.
      *
+     * @param string $query
+     *
      * @return object
+     *
+     * @throws InvalidQueryException
+     * @throws KeyNotFoundException
+     * @throws PropertyNotFoundException
      */
     public function resolve(string $query)
     {
@@ -86,6 +91,7 @@ class DataResolver
             $data = $this->_model->get($parts[0])->getValue();
             $parts = array_slice($parts, 1);
 
+
             if (count($parts) > 0) {
                 foreach ($parts as $part) {
                     if (is_array($data)) {
@@ -93,7 +99,12 @@ class DataResolver
                             throw new KeyNotFoundException($part, $query);
                         }
                         $data = $data[$part];
-                    } elseif (is_subclass_of($data, "\Bubble\Data\IBubbleDataContext")) {
+                    } elseif ($data instanceof \ArrayAccess) {
+                        if (!$data->offsetExists($part)) {
+                            throw new KeyNotFoundException($part, $query);
+                        }
+                        $data = $data[$part];
+                    } elseif ($data instanceof IBubbleDataContext) {
                         $part = trim($part, "()");
                         preg_match("#(\\w+)\\[(\w+)\\]#", $part, $matches);
                         $isIndexedArray = count($matches) > 0;
