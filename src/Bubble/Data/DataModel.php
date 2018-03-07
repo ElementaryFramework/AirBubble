@@ -51,21 +51,45 @@ class DataModel
      */
     private $_data;
 
+    /**
+     * DataModel constructor.
+     */
     public function __construct()
     {
         $this->_data = array();
     }
 
+    /**
+     * Adds a template's data with a KeyValuePair.
+     *
+     * @param KeyValuePair $data The template's data to add
+     */
     public function add(KeyValuePair $data)
     {
         $this->_data[$data->getKey()] = $data;
     }
 
+    /**
+     * Sets a template's data with the given key.
+     *
+     * @param string $key   The key of the data.
+     * @param object $value The template's data associated to
+     * the key.
+     */
     public function set(string $key, $value)
     {
         $this->_data[$key] = new KeyValuePair($key, $value);
     }
 
+    /**
+     * Gets a template's data from the key.
+     *
+     * @param string $key The key of the data.
+     *
+     * @return KeyValuePair
+     *
+     * @throws InvalidQueryException
+     */
     public function get(string $key): KeyValuePair
     {
         if (array_key_exists($key, $this->_data)) {
