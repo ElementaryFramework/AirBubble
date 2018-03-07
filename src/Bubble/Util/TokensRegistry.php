@@ -31,6 +31,7 @@ namespace Bubble\Util;
 use Bubble\Tokens\ConditionToken;
 use Bubble\Tokens\DataTableToken;
 use Bubble\Tokens\ForeachToken;
+use Bubble\Tokens\ForToken;
 use Bubble\Tokens\InputLabelToken;
 use Bubble\Tokens\SelectItemsToken;
 use Bubble\Tokens\TextToken;
@@ -63,7 +64,8 @@ class TokensRegistry
         "b:condition" => ConditionToken::class,
         "b:foreach" => ForeachToken::class,
         "b:dataTable" => DataTableToken::class,
-        "b:selectItems" => SelectItemsToken::class
+        "b:selectItems" => SelectItemsToken::class,
+        "b:for" => ForToken::class
     );
 
     /**
