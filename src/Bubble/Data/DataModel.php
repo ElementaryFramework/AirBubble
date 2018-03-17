@@ -73,7 +73,7 @@ class DataModel
      * Sets a template's data with the given key.
      *
      * @param string $key   The key of the data.
-     * @param object $value The template's data associated to
+     * @param mixed $value The template's data associated to
      * the key.
      */
     public function set(string $key, $value)
