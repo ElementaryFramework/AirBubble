@@ -28,11 +28,9 @@
 
 namespace Bubble;
 
-use Bubble\Parser\Tokenizer;
 use Bubble\Data\DataModel;
-use Bubble\Util\KeyValuePair;
-use Bubble\Parser\TokensRegistry;
 use Bubble\Renderer\Template;
+use Bubble\Util\KeyValuePair;
 
 /**
  * Define the type of token which
@@ -100,18 +98,18 @@ class Bubble
         return $template->outputString();
     }
 
-    public function compileFile(string $path, string $output)
+    public function compileFile(string $path, string $output): void
     {
         $template = Template::fromFile($path);
         $template->setDataModel($this->_dataModel);
-        return $template->outputFile($output);
+        $template->outputFile($output);
     }
 
-    public function compileString(string $content, string $output)
+    public function compileString(string $content, string $output): void
     {
         $template = Template::fromString($content);
         $template->setDataModel($this->_dataModel);
-        return $template->outputFile($output);
+        $template->outputFile($output);
     }
 }
 
