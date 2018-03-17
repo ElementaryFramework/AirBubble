@@ -1,5 +1,5 @@
 {
-    "name": "bubble/bubble-php",
+    "name": "na2axl/bubble",
     "description": "Bubble - A PHP template engine, built on top of MVC specifications",
     "type": "library",
     "require-dev": {
