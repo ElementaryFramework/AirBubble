@@ -35,6 +35,7 @@ use Bubble\Tokens\ForToken;
 use Bubble\Tokens\InputLabelToken;
 use Bubble\Tokens\SelectItemsToken;
 use Bubble\Tokens\TextToken;
+use Bubble\Tokens\IncludeToken;
 
 /**
  * Template tokens registry
@@ -59,6 +60,7 @@ class TokensRegistry
      * @var array
      */
     private static $_registry = array(
+        "b:include"  => IncludeToken::class,
         "b:text" => TextToken::class,
         "b:inputLabel" => InputLabelToken::class,
         "b:condition" => ConditionToken::class,
