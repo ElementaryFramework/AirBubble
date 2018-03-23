@@ -117,6 +117,7 @@ class Template implements IParser, IRenderer
     public function parse()
     {
         if (!$this->_parsed) {
+            $this->_processInclusions();
             $this->_preParse();
             $this->_populateData();
             $this->_postParse();
@@ -143,7 +144,7 @@ class Template implements IParser, IRenderer
 
     public function outputString(): string
     {
-        return $this->render()->saveHTML();
+        return trim($this->render()->saveHTML(), "\n\t ");
     }
 
     public function outputFile(string $path)
@@ -159,6 +160,52 @@ class Template implements IParser, IRenderer
 
         $this->_xPath = new \DOMXPath($this->_dom);
         $this->_xPath->registerNamespace("b", self::SCHEMA_URI);
+    }
+
+    private function _processInclusions()
+    {
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+
+        $toReplace = array();
+        $toDelete  = array();
+
+        $found = false;
+
+        foreach ($this->_tokensList as $k => $token) {
+            if ($token->getType() === INCLUDE_STATE_TOKEN) {
+                $token->parse();
+
+                $found = !$found ? $token->getType() === INCLUDE_STATE_TOKEN : $found;
+
+                $res = $token->render();
+                if ($res === null) {
+                    array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                } else {
+                    array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                }
+            }
+        }
+
+        foreach ($toReplace as $replacement) {
+            if ($replacement[0]->nodeName === "b:outputWrapper") {
+                foreach ($replacement[0]->childNodes as $child) {
+                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+                }
+                $replacement[1]->parentNode->removeChild($replacement[1]);
+            } else {
+                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+            }
+        }
+
+        foreach ($toDelete as $delete) {
+            $delete->parentNode->removeChild($delete);
+        }
+
+        $this->_templateString = $this->_dom->saveXML();
+
+        if ($found) {
+            $this->_processInclusions();
+        }
     }
 
     private function _preParse()
@@ -255,20 +302,13 @@ class Template implements IParser, IRenderer
 
     private function _populateData()
     {
-        $this->_templateString = preg_replace_callback(self::DATA_MODEL_QUERY_REGEX, function ($m) {
-            return Utilities::toString($this->_dataResolver->resolve($m[1]));
-        }, $this->_templateString);
-
-        $this->_templateString = preg_replace_callback(self::EXPRESSION_REGEX, function ($m) {
-            $res = EvalSandBox::eval($m[1]);
-            return Utilities::toString($res);
-        }, $this->_templateString);
-
+        $this->_templateString = Utilities::populateData($this->_templateString, $this->_dataResolver);
         return $this->_templateString;
     }
 
     public static function fromFile(string $path): Template
     {
+        $path = Utilities::resolveTemplate($path);
         if (file_exists($path)) {
             return self::fromString(file_get_contents($path));
         } else {
