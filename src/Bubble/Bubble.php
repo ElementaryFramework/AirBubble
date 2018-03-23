@@ -55,6 +55,13 @@ define('PRE_PARSE_TOKEN', 1);
 define('ALL_STATE_PARSE_TOKEN', 2);
 
 /**
+ * Define the type of token which
+ * are processed when the parser
+ * retrieve inclusions.
+ */
+define('INCLUDE_STATE_TOKEN', 3);
+
+/**
  * Bubble main class
  *
  * Manage the Bubble template engine, parse and render template files.
@@ -73,6 +80,28 @@ class Bubble
      * @var DataModel
      */
     private $_dataModel;
+
+    /**
+     * Stores the Bubble configuration
+     *
+     * @var BubbleConfig
+     */
+    private static $_bubbleConfig;
+
+    public static function setConfiguration(BubbleConfig $config)
+    {
+        self::$_bubbleConfig = $config;
+    }
+
+    /**
+     * Gets the Bubble configuration.
+     *
+     * @return BubbleConfig
+     */
+    public static function getConfiguration()
+    {
+        return self::$_bubbleConfig;
+    }
 
     public function __construct()
     {

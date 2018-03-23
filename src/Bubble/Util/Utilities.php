@@ -30,6 +30,9 @@ namespace Bubble\Util;
 
 use Bubble\Tokens\TextToken;
 use Bubble\Tokens\InputLabelToken;
+use Bubble\Bubble;
+use Bubble\Data\DataResolver;
+use Bubble\Renderer\Template;
 
 /**
  * Utilities
@@ -83,5 +86,25 @@ class Utilities
             $node = $refNode->ownerDocument->importNode($node, true);
             $refNode->parentNode->insertBefore($node, $refNode);
         }
+    }
+
+    public static function resolveTemplate(string $path)
+    {
+        $config = Bubble::getConfiguration();
+        return realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
+    }
+
+    public static function populateData(string $templatePart, DataResolver $resolver)
+    {
+        $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
+            return self::toString($resolver->resolve($m[1]));
+        }, $templatePart);
+
+        $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) {
+            $res = EvalSandBox::eval($m[1]);
+            return self::toString($res);
+        }, $templatePart);
+
+        return $templatePart;
     }
 }
