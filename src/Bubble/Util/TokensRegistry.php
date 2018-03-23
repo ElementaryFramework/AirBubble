@@ -131,7 +131,7 @@ class TokensRegistry
      *
      * @return array
      */
-    public static function registry()
+    public static function registry(): array
     {
         return self::$_registry;
     }
