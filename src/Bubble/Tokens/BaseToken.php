@@ -73,7 +73,7 @@ abstract class BaseToken implements IToken
     protected $_element;
 
     /**
-     * The template in which tihs token exists
+     * The template in which this token exists
      *
      * @var Template
      */
