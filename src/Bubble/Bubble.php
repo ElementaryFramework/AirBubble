@@ -62,6 +62,12 @@ define('ALL_STATE_PARSE_TOKEN', 2);
 define('INCLUDE_STATE_TOKEN', 3);
 
 /**
+ * Define if this configuration of PHP
+ * support mb_* functions.
+ */
+define('MBSTRING_AVAILABLE', function_exists('mb_get_info'));
+
+/**
  * Bubble main class
  *
  * Manage the Bubble template engine, parse and render template files.

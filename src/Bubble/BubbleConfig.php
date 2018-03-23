@@ -50,6 +50,13 @@ class BubbleConfig
     private $_templatesBasePath;
 
     /**
+     * Configure the template encoding to use.
+     *
+     * @var string
+     */
+    private $_templateEncoding;
+
+    /**
      * Get the template base path.
      *
      * @return  string
@@ -69,6 +76,29 @@ class BubbleConfig
     public function setTemplatesBasePath(string $path)
     {
         $this->_templatesBasePath = $path;
+        return $this;
+    }
+
+    /**
+     * Get the template encoding to use.
+     *
+     * @return  string
+     */
+    public function getEncoding()
+    {
+        return $this->_templateEncoding;
+    }
+
+    /**
+     * Set the template encoding to use.
+     *
+     * @param  string  $encoding The template encoding to use.
+     *
+     * @return  self
+     */
+    public function setEncoding(string $encoding)
+    {
+        $this->_templateEncoding = $encoding;
         return $this;
     }
 }

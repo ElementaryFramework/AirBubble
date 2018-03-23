@@ -28,6 +28,9 @@
 
 namespace Bubble\Data;
 
+use Bubble\Bubble;
+
+
 /**
  * Functions context
  *
@@ -51,11 +54,13 @@ class FunctionsContext
      */
     public function upper(string $var)
     {
-        return str_replace(
-            str_split("abcdefghijklmnopqrstuvwxyz"),
-            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-            $var
-        );
+        $config = Bubble::getConfiguration();
+
+        if (MBSTRING_AVAILABLE) {
+            return mb_strtoupper($var, $config->getEncoding());
+        } else {
+            return strtoupper($var);
+        }
     }
 
     /**
@@ -67,11 +72,13 @@ class FunctionsContext
      */
     public function lower(string $var)
     {
-        return str_replace(
-            str_split("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-            str_split("abcdefghijklmnopqrstuvwxyz"),
-            $var
-        );
+        $config = Bubble::getConfiguration();
+
+        if (MBSTRING_AVAILABLE) {
+            return mb_strtolower($var, $config->getEncoding());
+        } else {
+            return strtolower($var);
+        }
     }
 
     /**
@@ -127,22 +134,42 @@ class FunctionsContext
      */
     public function truncate(string $var, int $length = 80, string $trunk = "...", bool $trunkWord = false, bool $trunkMiddle = false)
     {
+        $var = html_entity_decode($var);
+
         if ($length === 0) {
             return "";
         }
 
-        if (isset($var[ $length ])) {
-            $length -= min($length, strlen($trunk));
+        if (MBSTRING_AVAILABLE) {
+            $config = Bubble::getConfiguration();
 
-            if ($trunkWord && !$trunkMiddle) {
-                $var = preg_replace("/\s+?(\S+)?$/", "", substr($var, 0, $length + 1));
+            if (isset($var[ $length ])) {
+                $length -= min($length, mb_strlen($trunk, $config->getEncoding()));
+
+                if ($trunkWord && !$trunkMiddle) {
+                    $var = preg_replace("/\s+?(\S+)?$/", "", mb_substr($var, 0, $length + 1, $config->getEncoding()));
+                }
+
+                if (!$trunkMiddle) {
+                    return mb_substr($var, 0, $length, $config->getEncoding()) . $trunk;
+                }
+
+                return mb_substr($var, 0, $length / 2, $config->getEncoding()) . $trunk . mb_substr($var, - $length / 2, $length, $config->getEncoding());
             }
+        } else {
+            if (isset($var[ $length ])) {
+                $length -= min($length, strlen($trunk));
 
-            if (!$trunkMiddle) {
-                return substr($var, 0, $length) . $trunk;
+                if ($trunkWord && !$trunkMiddle) {
+                    $var = preg_replace("/\s+?(\S+)?$/", "", substr($var, 0, $length + 1));
+                }
+
+                if (!$trunkMiddle) {
+                    return substr($var, 0, $length) . $trunk;
+                }
+
+                return substr($var, 0, $length / 2) . $trunk . substr($var, - $length / 2);
             }
-
-            return substr($var, 0, $length / 2) . $trunk . substr($var, - $length / 2);
         }
 
         return $var;
