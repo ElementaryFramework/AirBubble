@@ -88,21 +88,49 @@ class TokensRegistry
         self::$_registry[$elementName] = $elementClass;
     }
 
+    /**
+     * Gets a token from the registry by its name.
+     *
+     * @param string $elementName The name of the token.
+     *
+     * @return \Bubble\Tokens\IToken
+     */
     public static function get(string $elementName)
     {
-        return self::$_registry[$elementName];
+        return self::exists($elementName) ? self::$_registry[$elementName] : null;
     }
 
+    /**
+     * Removes a token in the registry by its name.
+     *
+     * @param string $elementName The name of the token.
+     *
+     * @return void
+     */
     public static function remove(string $elementName)
     {
-        unset(self::$_registry[$elementName]);
+        if (self::exists($elementName)) {
+            unset(self::$_registry[$elementName]);
+        }
     }
 
+    /**
+     * Checks if the given element exists in the registry.
+     *
+     * @param string $elementName The name of the element.
+     *
+     * @return boolean
+     */
     public static function exists(string $elementName): bool
     {
         return array_key_exists($elementName, self::$_registry);
     }
 
+    /**
+     * Returns the whole registry.
+     *
+     * @return array
+     */
     public static function registry()
     {
         return self::$_registry;
