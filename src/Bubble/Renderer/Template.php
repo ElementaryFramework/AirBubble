@@ -31,6 +31,7 @@ namespace Bubble\Renderer;
 use Bubble\Bubble;
 use Bubble\Data\DataModel;
 use Bubble\Data\DataResolver;
+use Bubble\Exception\TemplateNotFoundException;
 use Bubble\Parser\IParser;
 use Bubble\Parser\Tokenizer;
 use Bubble\Util\OutputIndenter;
@@ -109,15 +110,6 @@ class Template implements IParser, IRenderer
         $this->_templateString = $this->_mergeWithParent($content);
     }
 
-    private function _mergeWithParent($content): string {
-        if (TemplateExtender::isExtender($content)) {
-            $parent = TemplateExtender::getParentTemplate($content);
-            $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));
-        }
-
-        return $content;
-    }
-
     public function setDataModel(DataModel $model)
     {
         $this->_dataModel = $model;
@@ -143,6 +135,11 @@ class Template implements IParser, IRenderer
 
         $this->parse();
 
+        if ($this->_dom->doctype) {
+            $domImp = new \DOMImplementation();
+            $bubbleOutput->appendChild($domImp->createDocumentType($this->_dom->doctype->name, $this->_dom->doctype->publicId, $this->_dom->doctype->systemId));
+        }
+
         foreach ($this->_dom->documentElement->childNodes as $child) {
             $bubbleOutput->appendChild($bubbleOutput->importNode($child, true));
         }
@@ -154,7 +151,7 @@ class Template implements IParser, IRenderer
 
     public function outputString(): string
     {
-        $output = $this->render()->saveHTML();
+        $output = Utilities::computeOutputString($this->render());
 
         if (Bubble::getConfiguration()->isIndentOutput()) {
             $indenter = new OutputIndenter();
@@ -324,6 +321,15 @@ class Template implements IParser, IRenderer
     {
         $this->_templateString = Utilities::populateData($this->_templateString, $this->_dataResolver);
         return $this->_templateString;
+    }
+
+    private function _mergeWithParent($content): string {
+        if (TemplateExtender::isExtender($content)) {
+            $parent = TemplateExtender::getParentTemplate($content);
+            $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));
+        }
+
+        return $content;
     }
 
     public static function fromFile(string $path): Template

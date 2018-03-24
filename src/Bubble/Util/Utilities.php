@@ -108,10 +108,20 @@ class Utilities
         return $templatePart;
     }
 
-    public static function createDOMFromString(string $content): \DOMDocument {
+    public static function createDOMFromString(string $content): \DOMDocument
+    {
         $dom = new \DOMDocument("1.0", "utf-8");
         $dom->loadXML($content);
 
         return $dom;
+    }
+
+    public static function computeOutputString(\DOMDocument $parsed)
+    {
+        $output = $parsed->saveXML();
+        $outDOM = new \DOMDocument();
+        $outDOM->loadXML($output);
+
+        return $outDOM->saveHTML();
     }
 }
