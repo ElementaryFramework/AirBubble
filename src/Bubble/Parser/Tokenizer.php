@@ -28,12 +28,9 @@
 
 namespace Bubble\Parser;
 
-use Bubble\Exception\TemplateNotFoundException;
-use Bubble\Exception\UnknownTokenException;
-use Bubble\Renderer\Template;
-use Bubble\Tokens\IToken;
-use Bubble\Tokens\TextToken;
 use Bubble\Exception\ParseErrorException;
+use Bubble\Exception\UnknownTokenException;
+use Bubble\Tokens\IToken;
 use Bubble\Util\TokensRegistry;
 
 /**
