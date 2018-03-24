@@ -28,6 +28,7 @@
 
 namespace Bubble\Util;
 
+use Bubble\Tokens\BlockToken;
 use Bubble\Tokens\ConditionToken;
 use Bubble\Tokens\DataTableToken;
 use Bubble\Tokens\ForeachToken;
@@ -67,7 +68,8 @@ class TokensRegistry
         "b:foreach" => ForeachToken::class,
         "b:dataTable" => DataTableToken::class,
         "b:selectItems" => SelectItemsToken::class,
-        "b:for" => ForToken::class
+        "b:for" => ForToken::class,
+        "b:block" => BlockToken::class
     );
 
     /**
