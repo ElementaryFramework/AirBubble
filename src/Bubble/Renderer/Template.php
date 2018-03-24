@@ -33,7 +33,8 @@ use Bubble\Data\DataModel;
 use Bubble\Data\DataResolver;
 use Bubble\Parser\IParser;
 use Bubble\Parser\Tokenizer;
-use Bubble\Util\Indenter;
+use Bubble\Util\OutputIndenter;
+use Bubble\Util\TemplateExtender;
 use Bubble\Util\Utilities;
 
 /**
@@ -50,7 +51,7 @@ use Bubble\Util\Utilities;
  */
 class Template implements IParser, IRenderer
 {
-    private const SCHEMA_URI = "http://bubble.na2axl.tk/schema";
+    public const SCHEMA_URI = "http://bubble.na2axl.tk/schema";
 
     public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9._()\\[\\]]+)\\}/U";
 
@@ -105,6 +106,11 @@ class Template implements IParser, IRenderer
 
     private function __construct(string $content)
     {
+        if (TemplateExtender::isExtender($content)) {
+            $parent = TemplateExtender::getParentTemplate($content);
+            $content = TemplateExtender::merge($parent, $content);
+        }
+
         $this->_templateString = $content;
     }
 
@@ -147,7 +153,7 @@ class Template implements IParser, IRenderer
         $output = $this->render()->saveHTML();
 
         if (Bubble::getConfiguration()->isIndentOutput()) {
-            $indenter = new Indenter();
+            $indenter = new OutputIndenter();
             try {
                 $output = $indenter->indent($output);
             } catch (\Exception $e) {
@@ -319,6 +325,7 @@ class Template implements IParser, IRenderer
     public static function fromFile(string $path): Template
     {
         $path = Utilities::resolveTemplate($path);
+
         if (file_exists($path)) {
             return self::fromString(file_get_contents($path));
         } else {
