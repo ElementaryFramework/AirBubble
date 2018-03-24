@@ -98,7 +98,7 @@ abstract class BaseToken implements IToken
     /**
      * Parses attributes for this element.
      *
-     * @return mixed
+     * @return mixed|void
      */
     abstract protected function _parseAttributes();
 
