@@ -106,12 +106,16 @@ class Template implements IParser, IRenderer
 
     private function __construct(string $content)
     {
+        $this->_templateString = $this->_mergeWithParent($content);
+    }
+
+    private function _mergeWithParent($content): string {
         if (TemplateExtender::isExtender($content)) {
             $parent = TemplateExtender::getParentTemplate($content);
-            $content = TemplateExtender::merge($parent, $content);
+            $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));
         }
 
-        $this->_templateString = $content;
+        return $content;
     }
 
     public function setDataModel(DataModel $model)
