@@ -29,7 +29,7 @@
 namespace Bubble\Util;
 
 /**
- * Indenter
+ * OutputIndenter
  *
  * Indent HTML code from Bubble templates output.
  *
@@ -39,7 +39,7 @@ namespace Bubble\Util;
  * @license  LGPL-3.0 <https://opensource.org/licenses/LGPL-3.0>
  * @link     http://bubble.na2axl.tk/docs/api/Bubble/Util/Indenter
  */
-class Indenter
+class OutputIndenter
 {
     const ELEMENT_TYPE_BLOCK = 0;
     const ELEMENT_TYPE_INLINE = 1;
@@ -103,7 +103,7 @@ class Indenter
     {
         $this->log = array();
 
-        // Indenter does not indent <script> body. Instead, it temporary removes it from the code, indents the input, and restores the script body.
+        // OutputIndenter does not indent <script> body. Instead, it temporary removes it from the code, indents the input, and restores the script body.
         if (preg_match_all('/<script\b[^>]*>([\s\S]*?)<\/script>/mi', $input, $matches)) {
             $this->temporary_replacements_script = $matches[0];
             foreach ($matches[0] as $i => $match) {
@@ -113,7 +113,7 @@ class Indenter
 
         // Removing double whitespaces to make the source code easier to read.
         // With exception of <pre>/ CSS white-space changing the default behaviour, double whitespace is meaningless in HTML output.
-        // This reason alone is sufficient not to use Indenter in production.
+        // This reason alone is sufficient not to use OutputIndenter in production.
         $input = str_replace("\t", '', $input);
         $input = preg_replace('/\s{2,}/', ' ', $input);
 
