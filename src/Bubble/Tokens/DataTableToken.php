@@ -142,6 +142,8 @@ class DataTableToken extends BaseToken
      * Parses the token.
      *
      * @return void
+     * @throws ElementNotFoundException
+     * @throws UnexpectedTokenException
      */
     public function parse()
     {
@@ -198,6 +200,7 @@ class DataTableToken extends BaseToken
      * Render the token.
      *
      * @return \DOMNode|null
+     * @throws ElementNotFoundException
      */
     public function render(): ?\DOMNode
     {
@@ -230,8 +233,6 @@ class DataTableToken extends BaseToken
             // TODO: Create an exception for this
             throw new \Exception("Non-iterable data provided to a foreach loop.");
         }
-
-        $innerHTML = Utilities::innerHTML($this->_element);
 
         $domElement = $this->_document->createElement("table", "");
 
