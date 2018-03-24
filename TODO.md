@@ -15,4 +15,4 @@
 * [x] Eval context
 * [ ] Component declaration
 * [x] Fragment include
-* [ ] Fragment extend
+* [x] Fragment extend
