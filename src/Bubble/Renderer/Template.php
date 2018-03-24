@@ -28,13 +28,13 @@
 
 namespace Bubble\Renderer;
 
-use Bubble\Parser\Tokenizer;
+use Bubble\Bubble;
 use Bubble\Data\DataModel;
 use Bubble\Data\DataResolver;
-use Bubble\Util\Utilities;
 use Bubble\Parser\IParser;
-use Bubble\Tokens\ConditionToken;
-use Bubble\Util\EvalSandBox;
+use Bubble\Parser\Tokenizer;
+use Bubble\Util\Indenter;
+use Bubble\Util\Utilities;
 
 /**
  * Template file
@@ -144,7 +144,17 @@ class Template implements IParser, IRenderer
 
     public function outputString(): string
     {
-        return trim($this->render()->saveHTML(), "\n\t ");
+        $output = $this->render()->saveHTML();
+
+        if (Bubble::getConfiguration()->isIndentOutput()) {
+            $indenter = new Indenter();
+            try {
+                $output = $indenter->indent($output);
+            } catch (\Exception $e) {
+            }
+        }
+
+        return $output;
     }
 
     public function outputFile(string $path)
@@ -167,7 +177,7 @@ class Template implements IParser, IRenderer
         $this->_loadParser(Tokenizer::tokenize($this->_templateString));
 
         $toReplace = array();
-        $toDelete  = array();
+        $toDelete = array();
 
         $found = false;
 
@@ -213,7 +223,7 @@ class Template implements IParser, IRenderer
         $this->_loadParser(Tokenizer::tokenize($this->_templateString));
 
         $toReplace = array();
-        $toDelete  = array();
+        $toDelete = array();
 
         $found = false;
 
@@ -259,7 +269,7 @@ class Template implements IParser, IRenderer
         $this->_loadParser(Tokenizer::tokenize($this->_templateString));
 
         $toReplace = array();
-        $toDelete  = array();
+        $toDelete = array();
 
         $found = false;
 

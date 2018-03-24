@@ -57,9 +57,39 @@ class BubbleConfig
     private $_templateEncoding;
 
     /**
+     * Define if the renderer have to indent
+     * the output.
+     *
+     * @var bool
+     */
+    private $_indentOutput;
+
+    /**
+     * Checks if the renderer have to indent the
+     * output.
+     *
+     * @return bool
+     */
+    public function isIndentOutput(): bool
+    {
+        return $this->_indentOutput;
+    }
+
+    /**
+     * Sets if the renderer have to
+     * indent the output.
+     *
+     * @param bool $indentOutput
+     */
+    public function setIndentOutput(bool $indentOutput): void
+    {
+        $this->_indentOutput = $indentOutput;
+    }
+
+    /**
      * Get the template base path.
      *
-     * @return  string
+     * @return string
      */
     public function getTemplatesBasePath()
     {
@@ -69,9 +99,9 @@ class BubbleConfig
     /**
      * Set the template base path.
      *
-     * @param  string  $_templatesBasePath  will be resolved.
+     * @param string $path The path.
      *
-     * @return  self
+     * @return self
      */
     public function setTemplatesBasePath(string $path)
     {
@@ -82,7 +112,7 @@ class BubbleConfig
     /**
      * Get the template encoding to use.
      *
-     * @return  string
+     * @return string
      */
     public function getEncoding()
     {
@@ -92,9 +122,9 @@ class BubbleConfig
     /**
      * Set the template encoding to use.
      *
-     * @param  string  $encoding The template encoding to use.
+     * @param string $encoding The template encoding to use.
      *
-     * @return  self
+     * @return self
      */
     public function setEncoding(string $encoding)
     {
