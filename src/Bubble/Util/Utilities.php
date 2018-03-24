@@ -71,7 +71,7 @@ class Utilities
     public static function appendHTML(\DOMNode $parent, string $html)
     {
         $tmpDoc = new \DOMDocument();
-        $tmpDoc->loadXML("<wrapper>{$html}</wrapper>");
+        $tmpDoc->loadXML("<wrapper xmlns:b=\"" . Template::SCHEMA_URI . "\">{$html}</wrapper>");
         foreach ($tmpDoc->documentElement->childNodes as $node) {
             $node = $parent->ownerDocument->importNode($node, true);
             $parent->appendChild($node);
@@ -106,5 +106,12 @@ class Utilities
         }, $templatePart);
 
         return $templatePart;
+    }
+
+    public static function createDOMFromString(string $content): \DOMDocument {
+        $dom = new \DOMDocument("1.0", "utf-8");
+        $dom->loadXML($content);
+
+        return $dom;
     }
 }
