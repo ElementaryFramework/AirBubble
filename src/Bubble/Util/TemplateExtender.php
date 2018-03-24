@@ -84,17 +84,23 @@ class TemplateExtender
 
         $domP = Utilities::createDOMFromString($parent);
 
-        foreach ($blocks as $name => $block) {
-            $nodes = $domP->getElementsByTagNameNS(Template::SCHEMA_URI, "block");
-            foreach ($nodes as $node) {
-                if ($node->hasAttribute("name") && $node->getAttribute("name") === $name) {
-                    $parent = $node->parentNode;
-                    Utilities::insertHTMLBefore(Utilities::innerHTML($block), $node);
-                    $parent->removeChild($node);
-                }
+        self::_processReplaces($domP, $blocks);
+
+        return $domP->saveXML();
+    }
+
+    private static function _processReplaces(\DOMDocument &$dom, array $blocks)
+    {
+        $nodes = $dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block");
+        foreach ($nodes as $node) {
+            if ($node->hasAttribute("name") && array_key_exists($name = $node->getAttribute("name"), $blocks)) {
+                Utilities::insertHTMLBefore(Utilities::innerHTML($blocks[$name]), $node);
+                $node->parentNode->removeChild($node);
             }
         }
 
-        return $domP->saveXML();
+        if ($dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block")->length > 0) {
+            self::_processReplaces($dom, $blocks);
+        }
     }
 }
