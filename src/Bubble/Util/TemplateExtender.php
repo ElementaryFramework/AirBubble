@@ -89,8 +89,8 @@ class TemplateExtender
             foreach ($nodes as $node) {
                 if ($node->hasAttribute("name") && $node->getAttribute("name") === $name) {
                     $parent = $node->parentNode;
+                    Utilities::insertHTMLBefore(Utilities::innerHTML($block), $node);
                     $parent->removeChild($node);
-                    Utilities::appendHTML($parent, Utilities::innerHTML($block));
                 }
             }
         }

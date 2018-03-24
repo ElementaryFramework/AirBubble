@@ -71,7 +71,7 @@ class Utilities
     public static function appendHTML(\DOMNode $parent, string $html)
     {
         $tmpDoc = new \DOMDocument();
-        $tmpDoc->loadXML("<wrapper xmlns:b=\"" . Template::SCHEMA_URI . "\">{$html}</wrapper>");
+        $tmpDoc->loadXML("<wrapper>{$html}</wrapper>");
         foreach ($tmpDoc->documentElement->childNodes as $node) {
             $node = $parent->ownerDocument->importNode($node, true);
             $parent->appendChild($node);
@@ -81,7 +81,7 @@ class Utilities
     public static function insertHTMLBefore(string $html, \DOMNode $refNode)
     {
         $tmpDoc = new \DOMDocument();
-        $tmpDoc->loadXML("<wrapper>{$html}</wrapper>");
+        $tmpDoc->loadXML("<wrapper xmlns:b=\"" . Template::SCHEMA_URI . "\">{$html}</wrapper>");
         foreach ($tmpDoc->documentElement->childNodes as $node) {
             $node = $refNode->ownerDocument->importNode($node, true);
             $refNode->parentNode->insertBefore($node, $refNode);
