@@ -30,7 +30,6 @@ namespace Bubble\Tokens;
 
 use Bubble\Attributes\FromAttribute;
 use Bubble\Attributes\ToAttribute;
-use Bubble\Attributes\ValueAttribute;
 use Bubble\Attributes\VarAttribute;
 use Bubble\Exception\ElementNotFoundException;
 use Bubble\Exception\UnexpectedTokenException;
@@ -136,11 +135,15 @@ class ForToken extends BaseToken
         }
 
         if ($itemVar === null) {
-            throw new ElementNotFoundException("The \"" . ValueAttribute::NAME . "\" attribute is required in foreach loop.");
+            throw new ElementNotFoundException("The \"" . VarAttribute::NAME . "\" attribute is required in for loop.");
         }
 
         if ($itemStart === null) {
-            throw new ElementNotFoundException("The \"" . FromAttribute::NAME . "\" attribute is required in foreach loop.");
+            throw new ElementNotFoundException("The \"" . FromAttribute::NAME . "\" attribute is required in for loop.");
+        }
+
+        if ($itemEnd === null) {
+            throw new ElementNotFoundException("The \"" . ToAttribute::NAME . "\" attribute is required in for loop.");
         }
 
         $innerHTML = Utilities::innerHTML($this->_element);
