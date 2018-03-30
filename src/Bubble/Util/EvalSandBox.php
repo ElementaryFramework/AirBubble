@@ -47,7 +47,7 @@ class EvalSandBox
     /**
      * Functions context class to use
      *
-     * @var FunctionsContext
+     * @var string
      */
     private static $_functionContext = "\Bubble\Util\FunctionsContext";
 
@@ -57,6 +57,7 @@ class EvalSandBox
      * @param $context
      *
      * @return void
+     * @throws InvalidDataException When the given context is not a subclass of \Bubble\Data\FunctionsContext
      */
     public static function setFunctionsContext(string $context): void
     {
