@@ -28,13 +28,10 @@
 
 namespace Bubble\Tokens;
 
-use Bubble\Parser\AttributesList;
-use Bubble\Attributes\ElementAttribute;
-use Bubble\Attributes\ValueAttribute;
-use Bubble\Attributes\GenericAttribute;
 use Bubble\Attributes\ConditionAttribute;
-use Bubble\Exception\UnexpectedTokenException;
 use Bubble\Exception\ElementNotFoundException;
+use Bubble\Exception\UnexpectedTokenException;
+use Bubble\Parser\AttributesList;
 use Bubble\Util\Utilities;
 
 /**
@@ -69,6 +66,11 @@ class ConditionToken extends BaseToken
 
     private $_elsePath;
 
+    /**
+     * @inheritdoc
+     *
+     * @throws UnexpectedTokenException When the element has attributes.
+     */
     protected function _parseAttributes()
     {
         if ($this->_element->hasAttributes()) {
@@ -122,6 +124,9 @@ class ConditionToken extends BaseToken
      * Parses the token.
      *
      * @return void
+     *
+     * @throws ElementNotFoundException When the parser was usable to find a statement.
+     * @throws UnexpectedTokenException When the parser found a token on a bad place.
      */
     public function parse()
     {
@@ -213,9 +218,6 @@ class ConditionToken extends BaseToken
             $statement = $xPath->query($resultPath)->item(0);
             $domElement = $this->_document->createElement("b:outputWrapper", "");
             Utilities::appendHTML($domElement, Utilities::innerHTML($statement));
-            // foreach ($statement->childNodes as $child) {
-            //     $domElement->appendChild($child->cloneNode(true));
-            // }
         }
 
         return $domElement;

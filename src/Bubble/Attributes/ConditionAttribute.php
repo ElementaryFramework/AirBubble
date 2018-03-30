@@ -28,6 +28,8 @@
 
 namespace Bubble\Attributes;
 
+use Bubble\Util\EvalSandBox;
+
 /**
  * For Attribute
  *
@@ -53,6 +55,6 @@ class ConditionAttribute extends GenericAttribute
      */
     public function evaluate(): bool
     {
-        return eval("return " . $this->getValue() . ";");
+        return EvalSandBox::eval($this->getValue());
     }
 }
