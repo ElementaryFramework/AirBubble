@@ -106,6 +106,10 @@ class Bubble
      */
     public static function getConfiguration()
     {
+        if (self::$_bubbleConfig === null) {
+            self::setConfiguration(new BubbleConfig());
+        }
+
         return self::$_bubbleConfig;
     }
 
