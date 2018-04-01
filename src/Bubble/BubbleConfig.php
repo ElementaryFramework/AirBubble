@@ -47,14 +47,14 @@ class BubbleConfig
      *
      * @var string
      */
-    private $_templatesBasePath;
+    private $_templatesBasePath = "./";
 
     /**
      * Configure the template encoding to use.
      *
      * @var string
      */
-    private $_templateEncoding;
+    private $_templateEncoding = "utf-8";
 
     /**
      * Define if the renderer have to indent
@@ -62,7 +62,7 @@ class BubbleConfig
      *
      * @var bool
      */
-    private $_indentOutput;
+    private $_indentOutput = true;
 
     /**
      * Checks if the renderer have to indent the
