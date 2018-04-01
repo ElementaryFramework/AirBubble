@@ -54,7 +54,7 @@ class Template implements IParser, IRenderer
 {
     public const SCHEMA_URI = "http://bubble.na2axl.tk/schema";
 
-    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9._()\\[\\]]+)\\}/U";
+    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9,._\\(\\)\\[\\]'\" ]+)\\}/U";
 
     public const EXPRESSION_REGEX = "/\\{\\{(.+)\\}\\}/U";
 
