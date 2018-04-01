@@ -88,9 +88,17 @@ class DataResolver
         if (!array_key_exists($query, $this->_resolvedBackup)) {
             $parts = explode(".", $query);
 
+            preg_match("#(\\w+)\\[([\w\d]+)\\]#", $parts[0], $matches);
+            $isIndexedArray = count($matches) > 0;
+
+            if ($isIndexedArray) {
+                array_shift($parts);
+                array_unshift($parts, $matches[2]);
+                array_unshift($parts, $matches[1]);
+            }
+
             $data = $this->_model->get($parts[0])->getValue();
             $parts = array_slice($parts, 1);
-
 
             if (count($parts) > 0) {
                 foreach ($parts as $part) {
@@ -105,14 +113,25 @@ class DataResolver
                         }
                         $data = $data[$part];
                     } elseif ($data instanceof IBubbleDataContext) {
+                        $params = array();
+                        preg_match("#(\\w+)\\((.+)\\)#isU", $part, $matches);
+                        $isMethodCall = count($matches) > 0;
+                        if ($isMethodCall) {
+                            $params = array_map(function($item) {
+                                return trim($item, "\"' ");
+                            }, explode(",", $matches[2]));
+                            $part = $matches[1];
+                        }
+
                         $part = trim($part, "()");
-                        preg_match("#(\\w+)\\[(\w+)\\]#", $part, $matches);
+                        preg_match("#(\\w+)\\[([\w\d]+)\\]#", $part, $matches);
                         $isIndexedArray = count($matches) > 0;
                         $part = $isIndexedArray ? $matches[1] : $part;
+
                         if (!property_exists($data, $part) && !method_exists($data, $part)) {
                             throw new PropertyNotFoundException($part, $query);
                         }
-                        $data = $isIndexedArray ? ($data->$part)[$matches[2]] : (is_callable(array($data, $part)) ? $data->$part() : $data->$part);
+                        $data = $isIndexedArray ? ($data->$part)[$matches[2]] : (is_callable(array($data, $part)) ? call_user_func_array(array($data, $part), $params) : $data->$part);
                     } else {
                         throw new InvalidQueryException($query);
                     }
