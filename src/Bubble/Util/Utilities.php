@@ -96,9 +96,11 @@ class Utilities
 
     public static function populateData(string $templatePart, DataResolver $resolver)
     {
-        $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
-            return self::toString($resolver->resolve($m[1]));
-        }, $templatePart);
+        do {
+            $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
+                return self::toString($resolver->resolve($m[1]));
+            }, $templatePart);
+        } while(preg_match(Template::DATA_MODEL_QUERY_REGEX, $templatePart, $matches));
 
         $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) {
             $res = EvalSandBox::eval($m[1]);
