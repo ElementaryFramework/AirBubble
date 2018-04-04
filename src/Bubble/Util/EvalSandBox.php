@@ -34,6 +34,8 @@ namespace Bubble\Util;
 
 use Bubble\Exception\InvalidDataException;
 use Bubble\Exception\UnknownFunctionException;
+use Bubble\Data\DataResolver;
+use Bubble\Renderer\Template;
 
 /**
  * Eval sandbox
@@ -53,7 +55,7 @@ class EvalSandBox
      *
      * @var string
      */
-    private static $_functionContext = "\Bubble\Util\FunctionsContext";
+    private static $_functionContext = "\Bubble\Data\FunctionsContext";
 
     /**
      * Changes the current functions context.
@@ -74,24 +76,38 @@ class EvalSandBox
         self::$_functionContext = $context;
     }
 
-    public static function eval(string $code)
+    public static function eval(string $code, DataResolver $resolver)
     {
-        $code = self::_parseCode($code);
+        $parsed = self::_parseCode($code, $resolver);
         $context = self::$_functionContext;
 
         return eval(
-            "\$context = new {$context}; return {$code};"
+            "{$parsed[0]} \$context = new {$context}; return {$parsed[1]};"
         );
     }
 
-    private static function _parseCode(string $code): string
+    private static function _parseCode(string $code, DataResolver $resolver): array
     {
-        return preg_replace_callback("#@(\w+)\\(#U", function ($m) {
+        $var_allocation = "";
+
+        do {
+            $code = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver, &$var_allocation) {
+                $var_name = uniqid("tempvar_");
+                $var_value = Utilities::toEvalSandBoxValue($resolver->resolve($m[1]));
+                $var_allocation .= "\${$var_name} = {$var_value}; ";
+
+                return "\${$var_name}";
+            }, $code);
+        } while (preg_match(Template::DATA_MODEL_QUERY_REGEX, $code, $matches));
+
+        $code = preg_replace_callback("/@(\w+)\\(/U", function ($m) {
             if (!method_exists(self::$_functionContext, $m[1])) {
                 throw new UnknownFunctionException($m[1]);
             }
 
             return str_replace("@{$m[1]}(", "\$context->{$m[1]}(", $m[0]);
         }, $code);
+
+        return [$var_allocation, $code];
     }
 }
