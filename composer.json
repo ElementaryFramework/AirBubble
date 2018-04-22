@@ -1,6 +1,6 @@
 {
-    "name": "na2axl/bubble",
-    "description": "Bubble - A PHP template engine, built on top of MVC specifications",
+    "name": "elementaryframework/air-bubble",
+    "description": "AirBubble - A PHP template engine, built on top of MVC specifications",
     "type": "library",
     "require-dev": {
         "phpunit/phpunit": "^7"
@@ -23,7 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Bubble\\": "src/Bubble/"
+            "AirBubble\\": "src/AirBubble/"
         }
     }
 }

@@ -1,0 +1,215 @@
+<?php
+
+/**
+ * AirBubble - A PHP template engine
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * @category  Library
+ * @package   AirBubble
+ * @author    Axel Nana <ax.lnana@outlook.com>
+ * @copyright 2018 Aliens Group, Inc.
+ * @license   MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
+ * @version   GIT: 1.1.0
+ * @link      http://bubble.na2axl.tk
+ */
+
+namespace AirBubble\Tokens;
+
+use AirBubble\Attributes\KeyAttribute;
+use AirBubble\Attributes\ValueAttribute;
+use AirBubble\Attributes\VarAttribute;
+use AirBubble\Exception\ElementNotFoundException;
+use AirBubble\Exception\InvalidDataException;
+use AirBubble\Exception\UnexpectedTokenException;
+use AirBubble\Parser\AttributesList;
+use AirBubble\Renderer\Template;
+use AirBubble\Util\Utilities;
+
+/**
+ * Foreach Token
+ *
+ * Parse and render foreach loops.
+ *
+ * @category Tokens
+ * @package  AirBubble
+ * @author   Axel Nana <ax.lnana@outlook.com>
+ * @license  MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
+ * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Tokens/ForeachToken
+ */
+class ForeachToken extends BaseToken
+{
+    /**
+     * Token name.
+     */
+    public const NAME = "foreach";
+
+    /**
+     * Token type.
+     */
+    public const TYPE = PRE_PARSE_TOKEN;
+
+    /**
+     * Gets the type of this token.
+     *
+     * @return integer
+     */
+    public function getType(): int
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * Gets the name of this token.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return self::NAME;
+    }
+
+    /**
+     * Gets the path to this token
+     * in the DOM template.
+     *
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->_path;
+    }
+
+    /**
+     * Gets the list of attributes in
+     * this token.
+     *
+     * @return AttributesList
+     */
+    public function getAttributes(): AttributesList
+    {
+        return $this->_attributes;
+    }
+
+    /**
+     * Parses the token.
+     *
+     * @return void
+     */
+    public function parse()
+    {
+        $this->_attributes->parse();
+    }
+
+    /**
+     * Render the token.
+     *
+     * @return \DOMNode|null
+     *
+     * @throws ElementNotFoundException
+     * @throws InvalidDataException
+     * @throws \AirBubble\Exception\InvalidQueryException
+     * @throws \AirBubble\Exception\KeyNotFoundException
+     * @throws \AirBubble\Exception\PropertyNotFoundException
+     */
+    public function render(): ?\DOMNode
+    {
+        $iterator = null;
+        $itemVar = null;
+        $itemKey = null;
+
+        foreach ($this->_attributes as $attr) {
+            if ($attr instanceof ValueAttribute) {
+                $iterator = $attr->getValue();
+            } elseif ($attr instanceof VarAttribute) {
+                $itemVar = $attr->getValue();
+            } elseif ($attr instanceof KeyAttribute) {
+                $itemKey = $attr->getValue();
+            }
+        }
+
+        if ($itemVar === null) {
+            throw new ElementNotFoundException("The \"var\" attribute is required in foreach loop.");
+        }
+
+        if ($iterator === null) {
+            throw new ElementNotFoundException("The \"value\" attribute is required in foreach loop.");
+        }
+
+        $iterator = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $iterator);
+        $data = $this->_template->getResolver()->resolve($iterator);
+
+        if (!is_iterable($data)) {
+            throw new InvalidDataException("Non-iterable data provided to a foreach loop.");
+        }
+
+        $innerHTML = Utilities::innerHTML($this->_element);
+
+        $domElement = $this->_document->createElement("b:outputWrapper", "");
+
+        foreach ($data as $k => $v) {
+            $iterationHTML = preg_replace_callback(
+                Template::DATA_MODEL_QUERY_REGEX,
+                function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
+                    return str_replace($itemVar, "{$iterator}.{$k}", $m[0]);
+                },
+                $innerHTML
+            );
+
+            if ($itemKey !== null) {
+                $iterationHTML = preg_replace("/\\\$\\{{$itemKey}\\}/U", $k, $iterationHTML);
+            }
+
+            Utilities::appendHTML($domElement, $iterationHTML);
+        }
+
+        return $domElement;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @throws UnexpectedTokenException
+     */
+    protected function _parseAttributes()
+    {
+        if ($this->_element->hasAttributes()) {
+            foreach ($this->_element->attributes as $attr) {
+                switch ($attr->nodeName) {
+                    case "key":
+                        $this->_attributes->add(new KeyAttribute($attr, $this->_document));
+                        break;
+
+                    case "var":
+                        $this->_attributes->add(new VarAttribute($attr, $this->_document));
+                        break;
+
+                    case "value":
+                        $this->_attributes->add(new ValueAttribute($attr, $this->_document));
+                        break;
+
+                    default:
+                        throw new UnexpectedTokenException(
+                            "The \"b:foreach\" loop can only have \"value\", \"var\" or \"key\" for attributes."
+                        );
+                }
+            }
+        }
+    }
+}

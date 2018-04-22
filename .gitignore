@@ -16,7 +16,7 @@ composer.lock
 
 # Test files and folders
 tests/
-/src/Bubble/bubble.xsd
+/src/AirBubble/bubble.xsd
 
 # Docs (hidden for now)
 docs/
