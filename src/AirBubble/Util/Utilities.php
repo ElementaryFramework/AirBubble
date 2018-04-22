@@ -93,6 +93,8 @@ class Utilities
     public static function resolveTemplate(string $path)
     {
         $config = AirBubble::getConfiguration();
+        $extension = "." . $config->getTemplateExtension();
+        $path = strrpos($path, $extension) ? $path : $path . $extension;
         return realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
     }
 

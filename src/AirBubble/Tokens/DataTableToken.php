@@ -204,7 +204,12 @@ class DataTableToken extends BaseToken
      * Render the token.
      *
      * @return \DOMNode|null
+     *
      * @throws ElementNotFoundException
+     * @throws \AirBubble\Exception\InvalidQueryException
+     * @throws \AirBubble\Exception\KeyNotFoundException
+     * @throws \AirBubble\Exception\PropertyNotFoundException
+     * @throws \Exception
      */
     public function render(): ?\DOMNode
     {
@@ -235,7 +240,7 @@ class DataTableToken extends BaseToken
 
         if (!is_iterable($data)) {
             // TODO: Create an exception for this
-            throw new \Exception("Non-iterable data provided to a foreach loop.");
+            throw new \Exception("Non-iterable data provided to the data table.");
         }
 
         $domElement = $this->_document->createElement("table", "");

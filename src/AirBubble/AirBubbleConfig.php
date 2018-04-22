@@ -69,6 +69,13 @@ class AirBubbleConfig
     private $_indentOutput = true;
 
     /**
+     * Define the default extension for templates.
+     *
+     * @var string
+     */
+    private $_extension = "bubble";
+
+    /**
      * Checks if the renderer have to indent the
      * output.
      *
@@ -133,6 +140,29 @@ class AirBubbleConfig
     public function setEncoding(string $encoding)
     {
         $this->_templateEncoding = $encoding;
+        return $this;
+    }
+
+    /**
+     * Get the default template extension.
+     *
+     * @return string
+     */
+    public function getTemplateExtension()
+    {
+        return $this->_extension;
+    }
+
+    /**
+     * Set the default template extension.
+     *
+     * @param string $extension The template extension to use.
+     *
+     * @return self
+     */
+    public function setTemplateExtension(string $extension)
+    {
+        $this->_extension = $extension;
         return $this;
     }
 }
