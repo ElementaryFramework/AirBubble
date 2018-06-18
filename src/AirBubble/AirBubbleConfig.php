@@ -30,7 +30,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble;
+namespace ElementaryFramework\AirBubble;
 
 /**
  * AirBubble configuration class

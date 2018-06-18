@@ -30,19 +30,19 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\GenericAttribute;
-use AirBubble\Attributes\ItemsAttribute;
-use AirBubble\Attributes\LabelAttribute;
-use AirBubble\Attributes\ValueAttribute;
-use AirBubble\Attributes\VarAttribute;
-use AirBubble\Exception\ElementNotFoundException;
-use AirBubble\Exception\InvalidDataException;
-use AirBubble\Parser\AttributesList;
-use AirBubble\Renderer\Template;
-use AirBubble\Util\SelectItemsList;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
+use ElementaryFramework\AirBubble\Attributes\ItemsAttribute;
+use ElementaryFramework\AirBubble\Attributes\LabelAttribute;
+use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
+use ElementaryFramework\AirBubble\Attributes\VarAttribute;
+use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
+use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\SelectItemsList;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * Select Items Token
@@ -126,9 +126,9 @@ class SelectItemsToken extends BaseToken
      *
      * @throws ElementNotFoundException
      * @throws InvalidDataException
-     * @throws \AirBubble\Exception\InvalidQueryException
-     * @throws \AirBubble\Exception\KeyNotFoundException
-     * @throws \AirBubble\Exception\PropertyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
+     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
      */
     public function render(): ?\DOMNode
     {

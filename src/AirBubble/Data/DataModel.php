@@ -30,10 +30,10 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Data;
+namespace ElementaryFramework\AirBubble\Data;
 
-use AirBubble\Exception\InvalidQueryException;
-use AirBubble\Util\KeyValuePair;
+use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
+use ElementaryFramework\AirBubble\Util\KeyValuePair;
 
 /**
  * Template data model

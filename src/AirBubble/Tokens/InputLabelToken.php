@@ -30,12 +30,13 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\ForAttribute;
-use AirBubble\Attributes\GenericAttribute;
-use AirBubble\Attributes\ValueAttribute;
-use AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Attributes\ForAttribute;
+use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
+use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 
 /**
  * Input Label Token
@@ -146,14 +147,7 @@ class InputLabelToken extends BaseToken
         $value = $this->_element->nodeValue;
 
         foreach ($this->_attributes as $attr) {
-            if ($attr instanceof ForAttribute) {
-                $id = $attr->getValue();
-                $node = $this->_document->getElementById($id);
-                if ($node === null) {
-                    // throw new ElementNotFoundException("Cannot find the element referenced by the id \"{$id}\".");
-                }
-                array_push($attributesBuffer, $attr);
-            } elseif ($attr instanceof ValueAttribute) {
+            if ($attr instanceof ValueAttribute) {
                 $value = $attr->getValue();
             } else {
                 array_push($attributesBuffer, $attr);

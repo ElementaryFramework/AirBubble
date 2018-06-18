@@ -23,7 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "AirBubble\\": "src/AirBubble/"
+            "ElementaryFramework\\AirBubble\\": "src/AirBubble/"
         }
     }
 }

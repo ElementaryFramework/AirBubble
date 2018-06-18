@@ -30,7 +30,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Renderer;
+namespace ElementaryFramework\AirBubble\Renderer;
 
 /**
  * Renderer interface

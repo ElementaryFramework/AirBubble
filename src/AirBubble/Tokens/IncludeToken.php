@@ -30,14 +30,14 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\AirBubble;
-use AirBubble\Attributes\GenericAttribute;
-use AirBubble\Attributes\PathAttribute;
-use AirBubble\Parser\AttributesList;
-use AirBubble\Renderer\Template;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\AirBubble;
+use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
+use ElementaryFramework\AirBubble\Attributes\PathAttribute;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * Include Token

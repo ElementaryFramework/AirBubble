@@ -30,10 +30,10 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Attributes;
+namespace ElementaryFramework\AirBubble\Attributes;
 
-use AirBubble\Parser\IParser;
-use AirBubble\Renderer\IRenderer;
+use ElementaryFramework\AirBubble\Parser\IParser;
+use ElementaryFramework\AirBubble\Renderer\IRenderer;
 
 /**
  * Attribute interface

@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Parser;
+namespace ElementaryFramework\AirBubble\Parser;
 
-use AirBubble\Attributes\IAttribute;
+use ElementaryFramework\AirBubble\Attributes\IAttribute;
 
 /**
  * Attributes List

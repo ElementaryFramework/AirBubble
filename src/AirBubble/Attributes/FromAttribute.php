@@ -30,7 +30,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Attributes;
+namespace ElementaryFramework\AirBubble\Attributes;
 
 /**
  * From Attribute

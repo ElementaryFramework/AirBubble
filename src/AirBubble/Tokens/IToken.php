@@ -30,12 +30,12 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Parser\AttributesList;
-use AirBubble\Parser\IParser;
-use AirBubble\Renderer\IRenderer;
-use AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Parser\IParser;
+use ElementaryFramework\AirBubble\Renderer\IRenderer;
+use ElementaryFramework\AirBubble\Renderer\Template;
 
 /**
  * Token interface

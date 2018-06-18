@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Renderer\Template;
 
 /**
  * Template Extender

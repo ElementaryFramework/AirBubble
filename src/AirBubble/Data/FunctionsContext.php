@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Data;
+namespace ElementaryFramework\AirBubble\Data;
 
-use AirBubble\AirBubble;
+use ElementaryFramework\AirBubble\AirBubble;
 
 
 /**

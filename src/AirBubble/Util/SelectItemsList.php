@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\Tokens\IToken;
+use ElementaryFramework\AirBubble\Tokens\IToken;
 
 /**
  * Select Items List

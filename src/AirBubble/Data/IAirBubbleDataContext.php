@@ -30,7 +30,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Data;
+namespace ElementaryFramework\AirBubble\Data;
 
 /**
  * AirBubble's template data context interface

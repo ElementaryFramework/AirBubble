@@ -30,11 +30,11 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Parser;
+namespace ElementaryFramework\AirBubble\Parser;
 
-use AirBubble\Renderer\Template;
-use AirBubble\Tokens\ForeachToken;
-use AirBubble\Tokens\IToken;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Tokens\ForeachToken;
+use ElementaryFramework\AirBubble\Tokens\IToken;
 
 /**
  * Token List

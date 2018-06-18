@@ -30,11 +30,11 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Data;
+namespace ElementaryFramework\AirBubble\Data;
 
-use AirBubble\Exception\InvalidQueryException;
-use AirBubble\Exception\KeyNotFoundException;
-use AirBubble\Exception\PropertyNotFoundException;
+use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
+use ElementaryFramework\AirBubble\Exception\KeyNotFoundException;
+use ElementaryFramework\AirBubble\Exception\PropertyNotFoundException;
 
 /**
  * Template data resolver

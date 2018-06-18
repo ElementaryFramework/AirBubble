@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\Data\IAirBubbleDataContext;
+use ElementaryFramework\AirBubble\Data\IAirBubbleDataContext;
 
 /**
  * Key value pair

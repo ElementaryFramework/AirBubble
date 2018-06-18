@@ -30,15 +30,15 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\FromAttribute;
-use AirBubble\Attributes\ToAttribute;
-use AirBubble\Attributes\VarAttribute;
-use AirBubble\Exception\ElementNotFoundException;
-use AirBubble\Exception\UnexpectedTokenException;
-use AirBubble\Parser\AttributesList;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Attributes\FromAttribute;
+use ElementaryFramework\AirBubble\Attributes\ToAttribute;
+use ElementaryFramework\AirBubble\Attributes\VarAttribute;
+use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
+use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * For Token

@@ -30,11 +30,11 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble;
+namespace ElementaryFramework\AirBubble;
 
-use AirBubble\Data\DataModel;
-use AirBubble\Renderer\Template;
-use AirBubble\Util\KeyValuePair;
+use ElementaryFramework\AirBubble\Data\DataModel;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\KeyValuePair;
 
 /**
  * Define the type of token which

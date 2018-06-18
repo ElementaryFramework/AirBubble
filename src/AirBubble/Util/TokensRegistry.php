@@ -30,17 +30,17 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\Tokens\BlockToken;
-use AirBubble\Tokens\ConditionToken;
-use AirBubble\Tokens\DataTableToken;
-use AirBubble\Tokens\ForeachToken;
-use AirBubble\Tokens\ForToken;
-use AirBubble\Tokens\IncludeToken;
-use AirBubble\Tokens\InputLabelToken;
-use AirBubble\Tokens\SelectItemsToken;
-use AirBubble\Tokens\TextToken;
+use ElementaryFramework\AirBubble\Tokens\BlockToken;
+use ElementaryFramework\AirBubble\Tokens\ConditionToken;
+use ElementaryFramework\AirBubble\Tokens\DataTableToken;
+use ElementaryFramework\AirBubble\Tokens\ForeachToken;
+use ElementaryFramework\AirBubble\Tokens\ForToken;
+use ElementaryFramework\AirBubble\Tokens\IncludeToken;
+use ElementaryFramework\AirBubble\Tokens\InputLabelToken;
+use ElementaryFramework\AirBubble\Tokens\SelectItemsToken;
+use ElementaryFramework\AirBubble\Tokens\TextToken;
 
 /**
  * Template tokens registry
@@ -101,7 +101,7 @@ class TokensRegistry
      *
      * @param string $elementName The name of the token.
      *
-     * @return \AirBubble\Tokens\IToken
+     * @return \ElementaryFramework\AirBubble\Tokens\IToken
      */
     public static function get(string $elementName)
     {

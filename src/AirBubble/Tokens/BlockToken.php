@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
 
 /**
  * Block Token

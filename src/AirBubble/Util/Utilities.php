@@ -30,11 +30,11 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\AirBubble;
-use AirBubble\Data\DataResolver;
-use AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\AirBubble;
+use ElementaryFramework\AirBubble\Data\DataResolver;
+use ElementaryFramework\AirBubble\Renderer\Template;
 
 /**
  * Utilities

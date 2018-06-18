@@ -30,12 +30,12 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\ElementAttribute;
-use AirBubble\Attributes\GenericAttribute;
-use AirBubble\Attributes\ValueAttribute;
-use AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Attributes\ElementAttribute;
+use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
+use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
 
 /**
  * Text Token

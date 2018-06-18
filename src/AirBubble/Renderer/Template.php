@@ -30,17 +30,17 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Renderer;
+namespace ElementaryFramework\AirBubble\Renderer;
 
-use AirBubble\AirBubble;
-use AirBubble\Data\DataModel;
-use AirBubble\Data\DataResolver;
-use AirBubble\Exception\TemplateNotFoundException;
-use AirBubble\Parser\IParser;
-use AirBubble\Parser\Tokenizer;
-use AirBubble\Util\OutputIndenter;
-use AirBubble\Util\TemplateExtender;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\AirBubble;
+use ElementaryFramework\AirBubble\Data\DataModel;
+use ElementaryFramework\AirBubble\Data\DataResolver;
+use ElementaryFramework\AirBubble\Exception\TemplateNotFoundException;
+use ElementaryFramework\AirBubble\Parser\IParser;
+use ElementaryFramework\AirBubble\Parser\Tokenizer;
+use ElementaryFramework\AirBubble\Util\OutputIndenter;
+use ElementaryFramework\AirBubble\Util\TemplateExtender;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * Template file
@@ -327,7 +327,8 @@ class Template implements IParser, IRenderer
         return $this->_templateString;
     }
 
-    private function _mergeWithParent($content): string {
+    private function _mergeWithParent($content): string
+    {
         if (TemplateExtender::isExtender($content)) {
             $parent = TemplateExtender::getParentTemplate($content);
             $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));

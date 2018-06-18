@@ -30,17 +30,17 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\KeyAttribute;
-use AirBubble\Attributes\ValueAttribute;
-use AirBubble\Attributes\VarAttribute;
-use AirBubble\Exception\ElementNotFoundException;
-use AirBubble\Exception\InvalidDataException;
-use AirBubble\Exception\UnexpectedTokenException;
-use AirBubble\Parser\AttributesList;
-use AirBubble\Renderer\Template;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
+use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
+use ElementaryFramework\AirBubble\Attributes\VarAttribute;
+use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
+use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * Foreach Token
@@ -124,9 +124,9 @@ class ForeachToken extends BaseToken
      *
      * @throws ElementNotFoundException
      * @throws InvalidDataException
-     * @throws \AirBubble\Exception\InvalidQueryException
-     * @throws \AirBubble\Exception\KeyNotFoundException
-     * @throws \AirBubble\Exception\PropertyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
+     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
      */
     public function render(): ?\DOMNode
     {

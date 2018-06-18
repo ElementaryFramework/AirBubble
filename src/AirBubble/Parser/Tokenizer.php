@@ -30,12 +30,12 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Parser;
+namespace ElementaryFramework\AirBubble\Parser;
 
-use AirBubble\Exception\ParseErrorException;
-use AirBubble\Exception\UnknownTokenException;
-use AirBubble\Tokens\IToken;
-use AirBubble\Util\TokensRegistry;
+use ElementaryFramework\AirBubble\Exception\ParseErrorException;
+use ElementaryFramework\AirBubble\Exception\UnknownTokenException;
+use ElementaryFramework\AirBubble\Tokens\IToken;
+use ElementaryFramework\AirBubble\Util\TokensRegistry;
 
 /**
  * Template tokenizer

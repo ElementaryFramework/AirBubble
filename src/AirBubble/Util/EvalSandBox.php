@@ -30,12 +30,12 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Util;
+namespace ElementaryFramework\AirBubble\Util;
 
-use AirBubble\Data\DataResolver;
-use AirBubble\Exception\InvalidDataException;
-use AirBubble\Exception\UnknownFunctionException;
-use AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Data\DataResolver;
+use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Exception\UnknownFunctionException;
+use ElementaryFramework\AirBubble\Renderer\Template;
 
 /**
  * Eval sandbox
@@ -55,7 +55,7 @@ class EvalSandBox
      *
      * @var string
      */
-    private static $_functionContext = "\AirBubble\Data\FunctionsContext";
+    private static $_functionContext = "\ElementaryFramework\AirBubble\Data\FunctionsContext";
 
     /**
      * Changes the current functions context.
@@ -63,13 +63,13 @@ class EvalSandBox
      * @param $context
      *
      * @return void
-     * @throws InvalidDataException When the given context is not a subclass of \AirBubble\Data\FunctionsContext
+     * @throws InvalidDataException When the given context is not a subclass of \ElementaryFramework\AirBubble\Data\FunctionsContext
      */
     public static function setFunctionsContext(string $context): void
     {
-        if (!is_subclass_of($context, "\AirBubble\Data\FunctionsContext")) {
+        if (!is_subclass_of($context, "\ElementaryFramework\AirBubble\Data\FunctionsContext")) {
             throw new InvalidDataException(
-                "The given functions context is not a subclass of \AirBubble\Data\FunctionsContext."
+                "The given functions context is not a subclass of \ElementaryFramework\AirBubble\Data\FunctionsContext."
             );
         }
 

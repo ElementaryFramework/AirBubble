@@ -30,7 +30,7 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Exception;
+namespace ElementaryFramework\AirBubble\Exception;
 
 /**
  * Invalid data exception

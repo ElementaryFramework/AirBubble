@@ -30,16 +30,16 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Tokens;
+namespace ElementaryFramework\AirBubble\Tokens;
 
-use AirBubble\Attributes\KeyAttribute;
-use AirBubble\Attributes\ValueAttribute;
-use AirBubble\Attributes\VarAttribute;
-use AirBubble\Exception\ElementNotFoundException;
-use AirBubble\Exception\UnexpectedTokenException;
-use AirBubble\Parser\AttributesList;
-use AirBubble\Renderer\Template;
-use AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
+use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
+use ElementaryFramework\AirBubble\Attributes\VarAttribute;
+use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
+use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
+use ElementaryFramework\AirBubble\Parser\AttributesList;
+use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 
 /**
@@ -206,9 +206,9 @@ class DataTableToken extends BaseToken
      * @return \DOMNode|null
      *
      * @throws ElementNotFoundException
-     * @throws \AirBubble\Exception\InvalidQueryException
-     * @throws \AirBubble\Exception\KeyNotFoundException
-     * @throws \AirBubble\Exception\PropertyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
+     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
      * @throws \Exception
      */
     public function render(): ?\DOMNode

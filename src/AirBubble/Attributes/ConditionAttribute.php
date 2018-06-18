@@ -30,9 +30,9 @@
  * @link      http://bubble.na2axl.tk
  */
 
-namespace AirBubble\Attributes;
+namespace ElementaryFramework\AirBubble\Attributes;
 
-use AirBubble\Util\EvalSandBox;
+use ElementaryFramework\AirBubble\Util\EvalSandBox;
 
 /**
  * For Attribute
