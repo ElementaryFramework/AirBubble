@@ -183,7 +183,7 @@ class ConditionToken extends BaseToken
         foreach ($this->_conditionsMap as $path => $condition) {
             if ($condition instanceof ConditionAttribute) {
                 $condition->parse();
-                if ($condition->evaluate()) {
+                if ($condition->evaluate($this->_template->getResolver())) {
                     $truePath = $path;
                     break;
                 }

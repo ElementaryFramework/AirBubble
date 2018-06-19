@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Attributes;
 
+use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Util\EvalSandBox;
 
 /**
@@ -55,10 +56,12 @@ class ConditionAttribute extends GenericAttribute
     /**
      * Evaluate the condition.
      *
+     * @param DataResolver $resolver
+     *
      * @return boolean
      */
-    public function evaluate(): bool
+    public function evaluate(DataResolver $resolver): bool
     {
-        return EvalSandBox::eval($this->getValue());
+        return EvalSandBox::eval($this->getValue(), $resolver);
     }
 }
