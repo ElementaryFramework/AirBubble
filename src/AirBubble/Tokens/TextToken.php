@@ -35,7 +35,6 @@ namespace ElementaryFramework\AirBubble\Tokens;
 use ElementaryFramework\AirBubble\Attributes\ElementAttribute;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
-use ElementaryFramework\AirBubble\Parser\AttributesList;
 
 /**
  * Text Token
@@ -99,28 +98,6 @@ class TextToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    /**
-     * Gets the path to this token
-     * in the DOM template.
-     *
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->_path;
-    }
-
-    /**
-     * Gets the list of attributes in
-     * this token.
-     *
-     * @return AttributesList
-     */
-    public function getAttributes(): AttributesList
-    {
-        return $this->_attributes;
     }
 
     /**

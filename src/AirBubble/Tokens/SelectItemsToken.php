@@ -39,7 +39,6 @@ use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 use ElementaryFramework\AirBubble\Exception\InvalidDataException;
-use ElementaryFramework\AirBubble\Parser\AttributesList;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\SelectItemsList;
 use ElementaryFramework\AirBubble\Util\Utilities;
@@ -85,28 +84,6 @@ class SelectItemsToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    /**
-     * Gets the path to this token
-     * in the DOM template.
-     *
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->_path;
-    }
-
-    /**
-     * Gets the list of attributes in
-     * this token.
-     *
-     * @return AttributesList
-     */
-    public function getAttributes(): AttributesList
-    {
-        return $this->_attributes;
     }
 
     /**

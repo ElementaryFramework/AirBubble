@@ -35,7 +35,6 @@ namespace ElementaryFramework\AirBubble\Tokens;
 use ElementaryFramework\AirBubble\AirBubble;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\PathAttribute;
-use ElementaryFramework\AirBubble\Parser\AttributesList;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\Utilities;
 
@@ -103,28 +102,6 @@ class IncludeToken extends BaseToken
     }
 
     /**
-     * Gets the path to this token
-     * in the DOM template.
-     *
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->_path;
-    }
-
-    /**
-     * Gets the list of attributes in
-     * this token.
-     *
-     * @return AttributesList
-     */
-    public function getAttributes(): AttributesList
-    {
-        return $this->_attributes;
-    }
-
-    /**
      * Parses the token.
      *
      * @return void
@@ -138,6 +115,10 @@ class IncludeToken extends BaseToken
      * Render the token.
      *
      * @return \DOMNode|null
+     *
+     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
+     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
+     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
      */
     public function render(): ?\DOMNode
     {
