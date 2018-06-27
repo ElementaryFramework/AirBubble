@@ -33,6 +33,7 @@
 namespace ElementaryFramework\AirBubble\Util;
 
 use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Data\DataResolver;
 
 /**
  * Template Extender
@@ -59,10 +60,10 @@ class TemplateExtender
         return $dom->documentElement->hasAttribute("extends") ? $dom->documentElement->getAttribute("extends") : null;
     }
 
-    public static function getParentTemplate(string $template): string
+    public static function getParentTemplate(string $template, DataResolver $resolver): string
     {
         $parent = self::getParentName($template);
-        $path = Utilities::resolveTemplate($parent);
+        $path = Utilities::resolveTemplate($parent, $resolver);
 
         return file_get_contents($path);
     }

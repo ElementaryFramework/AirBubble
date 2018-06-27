@@ -330,7 +330,7 @@ class Template implements IParser, IRenderer
     private function _mergeWithParent($content): string
     {
         if (TemplateExtender::isExtender($content)) {
-            $parent = TemplateExtender::getParentTemplate($content);
+            $parent = TemplateExtender::getParentTemplate($content, $this->_dataResolver);
             $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));
         }
 
