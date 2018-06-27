@@ -90,11 +90,13 @@ class Utilities
         }
     }
 
-    public static function resolveTemplate(string $path, DataResolver $resolver)
+    public static function resolveTemplate(string $path, $resolver = null)
     {
-        $path = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
-            return self::toString($resolver->resolve($m[1]));
-        }, $path);
+        if ($resolver instanceof DataResolver) {
+            $path = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
+                return self::toString($resolver->resolve($m[1]));
+            }, $path);
+        }
 
         $config = AirBubble::getConfiguration();
         $extension = "." . $config->getTemplateExtension();

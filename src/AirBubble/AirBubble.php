@@ -129,29 +129,25 @@ class AirBubble
 
     public function renderFile(string $path): string
     {
-        $template = Template::fromFile($path);
-        $template->setDataModel($this->_dataModel);
+        $template = Template::fromFile($path, $this->_dataModel);
         return $template->outputString();
     }
 
     public function renderString(string $content): string
     {
-        $template = Template::fromString($content);
-        $template->setDataModel($this->_dataModel);
+        $template = Template::fromString($content, $this->_dataModel);
         return $template->outputString();
     }
 
     public function compileFile(string $path, string $output): void
     {
-        $template = Template::fromFile($path);
-        $template->setDataModel($this->_dataModel);
+        $template = Template::fromFile($path, $this->_dataModel);
         $template->outputFile($output);
     }
 
     public function compileString(string $content, string $output): void
     {
-        $template = Template::fromString($content);
-        $template->setDataModel($this->_dataModel);
+        $template = Template::fromString($content, $this->_dataModel);
         $template->outputFile($output);
     }
 }

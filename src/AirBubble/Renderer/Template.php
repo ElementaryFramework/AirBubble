@@ -109,8 +109,9 @@ class Template implements IParser, IRenderer
      */
     private $_parsed = false;
 
-    private function __construct(string $content)
+    private function __construct(string $content, DataModel $model)
     {
+        $this->setDataModel($model);
         $this->_templateString = $this->_mergeWithParent($content);
     }
 
@@ -337,20 +338,20 @@ class Template implements IParser, IRenderer
         return $content;
     }
 
-    public static function fromFile(string $path): Template
+    public static function fromFile(string $path, DataModel $model): Template
     {
-        $templatePath = Utilities::resolveTemplate($path, $this->_dataResolver);
+        $templatePath = Utilities::resolveTemplate($path);
 
         if (file_exists($templatePath)) {
-            return self::fromString(file_get_contents($templatePath));
+            return self::fromString(file_get_contents($templatePath), $model);
         } else {
             throw new TemplateNotFoundException($templatePath);
         }
     }
 
-    public static function fromString(string $content): Template
+    public static function fromString(string $content, DataModel $model): Template
     {
-        return new Template($content);
+        return new Template($content, $model);
     }
 
     /**
