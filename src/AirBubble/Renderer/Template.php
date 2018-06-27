@@ -339,7 +339,7 @@ class Template implements IParser, IRenderer
 
     public static function fromFile(string $path): Template
     {
-        $templatePath = Utilities::resolveTemplate($path);
+        $templatePath = Utilities::resolveTemplate($path, $this->_dataResolver);
 
         if (file_exists($templatePath)) {
             return self::fromString(file_get_contents($templatePath));
