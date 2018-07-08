@@ -42,6 +42,7 @@ use ElementaryFramework\AirBubble\Exception\InvalidDataException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\SelectItemsList;
 use ElementaryFramework\AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 
 /**
  * Select Items Token
@@ -114,6 +115,7 @@ class SelectItemsToken extends BaseToken
         $iterator = null;
         $itemVar = null;
         $itemKey = null;
+        $itemValue = null;
         $itemLabel = null;
 
         foreach ($this->_attributes as $attr) {
@@ -121,8 +123,10 @@ class SelectItemsToken extends BaseToken
                 $iterator = $attr->getValue();
             } elseif ($attr instanceof VarAttribute) {
                 $itemVar = $attr->getValue();
-            } elseif ($attr instanceof ValueAttribute) {
+            } elseif ($attr instanceof KeyAttribute) {
                 $itemKey = $attr->getValue();
+            } elseif ($attr instanceof ValueAttribute) {
+                $itemValue = $attr->getValue();
             } elseif ($attr instanceof LabelAttribute) {
                 $itemLabel = $attr->getValue();
             } else {
@@ -142,12 +146,12 @@ class SelectItemsToken extends BaseToken
         }
 
         if ($data instanceof SelectItemsList) {
-            $itemKey = "\${item.getKey()}";
+            $itemValue = "\${item.getKey()}";
             $itemLabel = "\${item.getValue()}";
             $itemVar = "item";
         }
 
-        if ($itemKey === null) {
+        if ($itemValue === null) {
             throw new ElementNotFoundException("The \"" . ValueAttribute::NAME . "\" attribute is required in \"b:selectItems\".");
         }
 
@@ -159,14 +163,14 @@ class SelectItemsToken extends BaseToken
             throw new ElementNotFoundException("The \"" . VarAttribute::NAME . "\" attribute is required in \"b:selectItems\".");
         }
 
-        $innerHTML = "<option value='{$itemKey}'>{$itemLabel}</option>";
+        $innerHTML = "<option value='{$itemValue}'>{$itemLabel}</option>";
 
         $domElement = $this->_document->createElement("select", "");
 
         foreach ($data as $k => $v) {
             $iterationHTML = preg_replace_callback(
                 Template::DATA_MODEL_QUERY_REGEX,
-                function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
+                function (array $m) use ($itemVar, $itemValue, $iterator, $k, $v) {
                     return str_replace($itemVar, "{$iterator}.{$k}", $m[0]);
                 },
                 $innerHTML
@@ -203,6 +207,10 @@ class SelectItemsToken extends BaseToken
 
                     case VarAttribute::NAME:
                         $this->_attributes->add(new VarAttribute($attr, $this->_document));
+                        break;
+
+                    case KeyAttribute::NAME:
+                        $this->_attributes->add(new KeyAttribute($attr, $this->_document));
                         break;
 
                     case ValueAttribute::NAME:
