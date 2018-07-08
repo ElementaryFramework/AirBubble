@@ -97,6 +97,8 @@ class TemplateExtender
     private static function _processReplaces(\DOMDocument &$dom, array $blocks)
     {
         $nodes = $dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block");
+        $length = $nodes->length;
+
         foreach ($nodes as $node) {
             if ($node->hasAttribute("name") && array_key_exists($name = $node->getAttribute("name"), $blocks)) {
                 Utilities::insertHTMLBefore(Utilities::innerHTML($blocks[$name]), $node);
@@ -104,7 +106,7 @@ class TemplateExtender
             }
         }
 
-        if ($dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block")->length > 0) {
+        if ($dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block")->length < $length) {
             self::_processReplaces($dom, $blocks);
         }
     }
