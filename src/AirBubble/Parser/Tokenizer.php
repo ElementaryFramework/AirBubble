@@ -36,6 +36,7 @@ use ElementaryFramework\AirBubble\Exception\ParseErrorException;
 use ElementaryFramework\AirBubble\Exception\UnknownTokenException;
 use ElementaryFramework\AirBubble\Tokens\IToken;
 use ElementaryFramework\AirBubble\Util\TokensRegistry;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * Template tokenizer
@@ -99,8 +100,11 @@ class Tokenizer
                 $this->_tokenizeElement($e);
             }
 
-            if (strpos($e->nodeName, "b:") === 0) {
-                $this->_tokens->add($this->_toToken($e));
+            foreach (NamespacesRegistry::registry() as $ns => $uri) {
+                if (strpos($e->nodeName, $ns) === 0) {
+                    $this->_tokens->add($this->_toToken($e));
+                    break;
+                }
             }
         }
     }
