@@ -66,7 +66,7 @@ abstract class NamespacesRegistry
      * @var array
      */
     private static $_registry = array(
-        "b:"  => Template::SCHEMA_URI
+        "b:"  => "http://bubble.na2axl.tk/schema"
     );
 
     /**

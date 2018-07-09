@@ -35,6 +35,7 @@ namespace ElementaryFramework\AirBubble\Util;
 use ElementaryFramework\AirBubble\AirBubble;
 use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Renderer\Template;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * Utilities
@@ -83,7 +84,7 @@ class Utilities
     public static function insertHTMLBefore(string $html, \DOMNode $refNode)
     {
         $tmpDoc = new \DOMDocument();
-        $tmpDoc->loadXML("<wrapper xmlns:b=\"" . Template::SCHEMA_URI . "\">{$html}</wrapper>");
+        $tmpDoc->loadXML("<wrapper xmlns:b=\"" . NamespacesRegistry::get("b:") . "\">{$html}</wrapper>");
         foreach ($tmpDoc->documentElement->childNodes as $node) {
             $node = $refNode->ownerDocument->importNode($node, true);
             $refNode->parentNode->insertBefore($node, $refNode);

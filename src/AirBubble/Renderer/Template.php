@@ -41,6 +41,7 @@ use ElementaryFramework\AirBubble\Parser\Tokenizer;
 use ElementaryFramework\AirBubble\Util\OutputIndenter;
 use ElementaryFramework\AirBubble\Util\TemplateExtender;
 use ElementaryFramework\AirBubble\Util\Utilities;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * Template file
@@ -56,8 +57,6 @@ use ElementaryFramework\AirBubble\Util\Utilities;
  */
 class Template implements IParser, IRenderer
 {
-    public const SCHEMA_URI = "http://bubble.na2axl.tk/schema";
-
     public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9,._\\(\\)\\[\\]'\" ]+)\\}/U";
 
     public const EXPRESSION_REGEX = "/\\{\\{(.+)\\}\\}/U";
@@ -181,7 +180,10 @@ class Template implements IParser, IRenderer
         $this->_tokensList->setTemplate($this);
 
         $this->_xPath = new \DOMXPath($this->_dom);
-        $this->_xPath->registerNamespace("b", self::SCHEMA_URI);
+
+        foreach (NamespacesRegistry::registry() as $ns => $uri) {
+            $this->_xPath->registerNamespace(rtrim($ns, ':'), $uri);
+        }
     }
 
     private function _processInclusions()

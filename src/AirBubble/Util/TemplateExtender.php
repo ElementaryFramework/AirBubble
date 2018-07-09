@@ -34,6 +34,7 @@ namespace ElementaryFramework\AirBubble\Util;
 
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Data\DataResolver;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * Template Extender
@@ -96,7 +97,7 @@ class TemplateExtender
 
     private static function _processReplaces(\DOMDocument &$dom, array $blocks)
     {
-        $nodes = $dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block");
+        $nodes = $dom->getElementsByTagNameNS(NamespacesRegistry::get("b:"), "block");
         $length = $nodes->length;
 
         foreach ($nodes as $node) {
@@ -106,7 +107,7 @@ class TemplateExtender
             }
         }
 
-        if ($dom->getElementsByTagNameNS(Template::SCHEMA_URI, "block")->length < $length) {
+        if ($dom->getElementsByTagNameNS(NamespacesRegistry::get("b:"), "block")->length < $length) {
             self::_processReplaces($dom, $blocks);
         }
     }
