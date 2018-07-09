@@ -54,7 +54,7 @@ use ElementaryFramework\AirBubble\Tokens\TextToken;
  * @license  MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
  * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Util/TokensRegistry
  */
-class TokensRegistry
+abstract class TokensRegistry
 {
     /**
      * The tokens registry.
@@ -91,7 +91,7 @@ class TokensRegistry
      *
      * @return void
      */
-    public static function add(string $elementName, $elementClass)
+    public static function add(string $elementName, string $elementClass)
     {
         self::$_registry[$elementName] = $elementClass;
     }
@@ -101,9 +101,9 @@ class TokensRegistry
      *
      * @param string $elementName The name of the token.
      *
-     * @return \ElementaryFramework\AirBubble\Tokens\IToken
+     * @return string
      */
-    public static function get(string $elementName)
+    public static function get(string $elementName): string
     {
         return self::exists($elementName) ? self::$_registry[$elementName] : null;
     }
