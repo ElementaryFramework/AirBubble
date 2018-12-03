@@ -123,6 +123,8 @@ class Utilities
 
     public static function createDOMFromString(string $content): \DOMDocument
     {
+        $content = preg_replace("/&(\\w+);/U", "[b:entity \$1]", $content);
+
         $dom = new \DOMDocument("1.0", "utf-8");
         $dom->loadXML($content);
 
@@ -132,10 +134,15 @@ class Utilities
     public static function computeOutputString(\DOMDocument $parsed)
     {
         $output = $parsed->saveXML();
+
         $outDOM = new \DOMDocument();
         $outDOM->loadXML($output);
 
-        return $outDOM->saveHTML();
+        $output = $outDOM->saveHTML();
+
+        $output = preg_replace("/\\[b:entity (\\w+)\\]/U", "&\$1;", $output);
+
+        return $output;
     }
 
     public static function toEvalSandBoxValue($value)

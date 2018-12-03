@@ -37,6 +37,7 @@ use ElementaryFramework\AirBubble\Exception\UnknownTokenException;
 use ElementaryFramework\AirBubble\Tokens\IToken;
 use ElementaryFramework\AirBubble\Util\TokensRegistry;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
+use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
  * Template tokenizer
@@ -74,12 +75,11 @@ class Tokenizer
         libxml_use_internal_errors(true);
 
         $this->_tokens = new TokensList();
-        $this->_dom = new \DOMDocument("1.0", "utf-8");
     }
 
     private function _load(string $content)
     {
-        $this->_dom->loadXML($content);
+        $this->_dom = Utilities::createDOMFromString($content);
 
         if ($this->_dom->documentElement->nodeName !== "b:bubble") {
             throw new ParseErrorException("The \"b:bubble\" tag have to be at the root of your document.");
