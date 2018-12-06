@@ -57,7 +57,7 @@ use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
  */
 class Template implements IParser, IRenderer
 {
-    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9,._\\(\\)\\[\\]'\" ]+)\\}/U";
+    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9,._\\(\\)\\[\\]'\"\/ ]+)\\}/U";
 
     public const EXPRESSION_REGEX = "/\\{\\{(.+)\\}\\}/U";
 
@@ -202,6 +202,7 @@ class Template implements IParser, IRenderer
                 $found = !$found ? $token->getType() === INCLUDE_STATE_TOKEN : $found;
 
                 $res = $token->render();
+
                 if ($res === null) {
                     array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
                 } else {
@@ -347,7 +348,7 @@ class Template implements IParser, IRenderer
         if (file_exists($templatePath)) {
             return self::fromString(file_get_contents($templatePath), $model);
         } else {
-            throw new TemplateNotFoundException($templatePath);
+            throw new TemplateNotFoundException($path);
         }
     }
 
