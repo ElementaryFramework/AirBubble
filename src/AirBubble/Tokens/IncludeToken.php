@@ -126,10 +126,18 @@ class IncludeToken extends BaseToken
 
         $templatePath = null;
         $dataContext = array();
+        $resolver = $this->_template->getResolver();
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof PathAttribute) {
                 $templatePath = $attr->getValue();
+                if (preg_match(Template::EXPRESSION_REGEX, $templatePath, $a)) {
+                    $templatePath = Utilities::populateData($templatePath, $resolver);
+                }
+                elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $templatePath, $a)) {
+                    $val = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $attr->getValue());
+                    $templatePath = $resolver->resolve($val);
+                }
             } elseif ($attr instanceof GenericAttribute) {
                 array_push($dataContext, $attr);
             }
@@ -139,7 +147,6 @@ class IncludeToken extends BaseToken
 
         foreach ($dataContext as $var) {
             $data = $var->getValue();
-            $resolver = $this->_template->getResolver();
             if (preg_match(Template::EXPRESSION_REGEX, $data, $a)) {
                 $data = Utilities::populateData($data, $resolver);
             }
