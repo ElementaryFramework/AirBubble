@@ -362,7 +362,7 @@ class Template implements IParser, IRenderer
      *
      * @return  DataResolver
      */
-    public function getResolver()
+    public function getResolver(): DataResolver
     {
         return $this->_dataResolver;
     }
