@@ -154,4 +154,17 @@ class Utilities
 
         return self::toString($value);
     }
+
+    public static function evaluate(string $query, DataResolver $resolver)
+    {
+        if (preg_match(Template::EXPRESSION_REGEX, $query, $a)) {
+            $query = self::populateData($query, $resolver);
+        }
+        elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $query, $a)) {
+            $query = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $query);
+            $query = $resolver->resolve($query);
+        }
+
+        return $query;
+    }
 }

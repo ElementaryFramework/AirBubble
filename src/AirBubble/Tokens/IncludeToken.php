@@ -130,14 +130,7 @@ class IncludeToken extends BaseToken
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof PathAttribute) {
-                $templatePath = $attr->getValue();
-                if (preg_match(Template::EXPRESSION_REGEX, $templatePath, $a)) {
-                    $templatePath = Utilities::populateData($templatePath, $resolver);
-                }
-                elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $templatePath, $a)) {
-                    $val = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $attr->getValue());
-                    $templatePath = $resolver->resolve($val);
-                }
+                $templatePath = Utilities::evaluate($attr->getValue(), $resolver);
             } elseif ($attr instanceof GenericAttribute) {
                 array_push($dataContext, $attr);
             }
@@ -146,14 +139,7 @@ class IncludeToken extends BaseToken
         $innerBubble = new AirBubble();
 
         foreach ($dataContext as $var) {
-            $data = $var->getValue();
-            if (preg_match(Template::EXPRESSION_REGEX, $data, $a)) {
-                $data = Utilities::populateData($data, $resolver);
-            }
-            elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $data, $a)) {
-                $val = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $var->getValue());
-                $data = $resolver->resolve($val);
-            }
+            $data = Utilities::evaluate($var->getValue(), $resolver);
             $innerBubble->set($var->getName(), $data);
         }
 
