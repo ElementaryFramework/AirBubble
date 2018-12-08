@@ -104,14 +104,15 @@ class ForToken extends BaseToken
         $itemEnd = null;
         $itemVar = null;
         $itemStart = null;
+        $resolver = $this->_template->getResolver();
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof FromAttribute) {
-                $itemStart = intval($attr->getValue());
+                $itemStart = intval(Utilities::evaluate($attr->getValue(), $resolver));
             } elseif ($attr instanceof VarAttribute) {
                 $itemVar = $attr->getValue();
             } elseif ($attr instanceof ToAttribute) {
-                $itemEnd = intval($attr->getValue());
+                $itemEnd = intval(Utilities::evaluate($attr->getValue(), $resolver));
             }
         }
 
