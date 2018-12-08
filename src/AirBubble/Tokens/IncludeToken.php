@@ -157,7 +157,10 @@ class IncludeToken extends BaseToken
             $innerBubble->set($var->getName(), $data);
         }
 
-        $includeString = $innerBubble->renderFile($templatePath);
+        $includeTemplate = $innerBubble->createTemplateFromFile($templatePath);
+        $includeDOM = $includeTemplate->render();
+
+        $includeString = $includeDOM->saveXML($includeDOM->documentElement);
 
         $domElement = $this->_document->createElement("b:outputWrapper", "");
 
