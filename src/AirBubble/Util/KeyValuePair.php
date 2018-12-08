@@ -57,7 +57,7 @@ class KeyValuePair implements IAirBubbleDataContext
     /**
      * Data value.
      *
-     * @var object
+     * @var mixed
      */
     private $_value;
 
@@ -80,7 +80,7 @@ class KeyValuePair implements IAirBubbleDataContext
     /**
      * Gets data value.
      *
-     * @return object
+     * @return mixed
      */
     public function getValue()
     {
@@ -90,7 +90,7 @@ class KeyValuePair implements IAirBubbleDataContext
     /**
      * Sets data value.
      *
-     * @param object $value Data value.
+     * @param mixed $value Data value.
      *
      * @return self
      */

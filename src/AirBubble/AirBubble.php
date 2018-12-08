@@ -127,6 +127,11 @@ class AirBubble
         $this->_dataModel->add(new KeyValuePair($key, $value));
     }
 
+    public function get(string $key)
+    {
+        return $this->_dataModel->get($key)->getValue();
+    }
+
     public function createTemplateFromFile(string $path): Template
     {
         return Template::fromFile($path, $this->_dataModel);
