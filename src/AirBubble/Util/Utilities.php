@@ -140,7 +140,9 @@ class Utilities
 
         $output = $outDOM->saveHTML();
 
+        // Apply some cleanup
         $output = preg_replace("/\\[b:entity (\\w+)\\]/U", "&\$1;", $output);
+        $output = str_replace(" xmlns:b=\"http://bubble.na2axl.tk/schema\"", '', $output);
 
         return $output;
     }
