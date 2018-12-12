@@ -125,6 +125,10 @@ class Utilities
     {
         $content = preg_replace("/&(\\w+);/U", "[b:entity \$1]", $content);
 
+        if (!AirBubble::getConfiguration()->isLeaveComments()) {
+            $content = preg_replace("/<!--.*-->/U", '', $content);
+        }
+
         $dom = new \DOMDocument("1.0", "utf-8");
         $dom->loadXML($content);
 
