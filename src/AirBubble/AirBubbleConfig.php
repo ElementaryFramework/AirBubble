@@ -76,6 +76,14 @@ class AirBubbleConfig
     private $_extension = "bubble";
 
     /**
+     * Define if comments must be removed from templates
+     * or not.
+     *
+     * @var boolean
+     */
+    private $_leaveComments = false;
+
+    /**
      * Checks if the renderer have to indent the
      * output.
      *
@@ -91,10 +99,14 @@ class AirBubbleConfig
      * indent the output.
      *
      * @param bool $indentOutput
+     *
+     * @return self
      */
-    public function setIndentOutput(bool $indentOutput): void
+    public function setIndentOutput(bool $indentOutput): self
     {
         $this->_indentOutput = $indentOutput;
+
+        return $this;
     }
 
     /**
@@ -102,7 +114,7 @@ class AirBubbleConfig
      *
      * @return string
      */
-    public function getTemplatesBasePath()
+    public function getTemplatesBasePath(): string
     {
         return $this->_templatesBasePath;
     }
@@ -114,9 +126,10 @@ class AirBubbleConfig
      *
      * @return self
      */
-    public function setTemplatesBasePath(string $path)
+    public function setTemplatesBasePath(string $path): self
     {
         $this->_templatesBasePath = $path;
+
         return $this;
     }
 
@@ -125,7 +138,7 @@ class AirBubbleConfig
      *
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->_templateEncoding;
     }
@@ -137,9 +150,10 @@ class AirBubbleConfig
      *
      * @return self
      */
-    public function setEncoding(string $encoding)
+    public function setEncoding(string $encoding): self
     {
         $this->_templateEncoding = $encoding;
+
         return $this;
     }
 
@@ -148,7 +162,7 @@ class AirBubbleConfig
      *
      * @return string
      */
-    public function getTemplateExtension()
+    public function getTemplateExtension(): string
     {
         return $this->_extension;
     }
@@ -160,9 +174,36 @@ class AirBubbleConfig
      *
      * @return self
      */
-    public function setTemplateExtension(string $extension)
+    public function setTemplateExtension(string $extension): self
     {
         $this->_extension = $extension;
+
+        return $this;
+    }
+
+    /**
+     * Checks if comments must be removed from templates
+     * files or not.
+     *
+     * @return boolean
+     */
+    public function isLeaveComments(): bool
+    {
+        return $this->_leaveComments;
+    }
+
+    /**
+     * Sets if comments must be removed from templates
+     * files or not.
+     *
+     * @param boolean $leaveComments
+     *
+     * @return self
+     */
+    public function setLeaveComments(bool $leaveComments): self
+    {
+        $this->_leaveComments = $leaveComments;
+
         return $this;
     }
 }
