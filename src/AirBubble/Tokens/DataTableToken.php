@@ -237,7 +237,7 @@ class DataTableToken extends BaseToken
             if (!$headPassed) {
                 foreach ($this->_headers as $value) {
                     $value = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                        return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
+                        return preg_replace("#^\\\$\\{{$itemVar}\b#U", "\${{$iterator}[{$k}]", $m[0]);
                     }, $value);
 
                     if ($itemKey !== null) {
@@ -257,7 +257,7 @@ class DataTableToken extends BaseToken
 
             foreach ($this->_columns as $value) {
                 $value = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                    return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
+                    return preg_replace("#^\\\$\\{{$itemVar}\b#U", "\${{$iterator}[{$k}]", $m[0]);
                 }, $value);
 
                 if ($itemKey !== null) {
@@ -273,7 +273,7 @@ class DataTableToken extends BaseToken
             if (!$footPassed) {
                 foreach ($this->_footers as $value) {
                     $value = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                        return str_replace($itemVar, "{$iterator}[{$k}]", $m[0]);
+                        return preg_replace("#^\\\$\\{{$itemVar}\b#U", "\${{$iterator}[{$k}]", $m[0]);
                     }, $value);
 
                     if ($itemKey !== null) {
