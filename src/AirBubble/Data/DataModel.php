@@ -102,4 +102,17 @@ class DataModel
 
         throw new InvalidQueryException($key);
     }
+
+    /**
+     * Creates a copy of this instance.
+     *
+     * @return DataModel
+     */
+    public function copy(): DataModel
+    {
+        $dataModel = new DataModel();
+        $dataModel->_data = $this->_data;
+
+        return $dataModel;
+    }
 }

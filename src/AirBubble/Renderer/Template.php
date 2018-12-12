@@ -366,4 +366,20 @@ class Template implements IParser, IRenderer
     {
         return $this->_dataResolver;
     }
+
+    /**
+     * Returns a copy of the DataModel handled
+     * by this Template.
+     *
+     * Any changes affected to the returned DataModel
+     * will not affect this instance of Template, until
+     * you call {@see Template::setDataModel} with the
+     * modified DataModel.
+     *
+     * @return DataModel
+     */
+    public function getDataModel(): DataModel
+    {
+        return $this->_dataModel->copy();
+    }
 }
