@@ -233,6 +233,9 @@ class DataTableToken extends BaseToken
         $headPassed = false;
         $footPassed = false;
 
+        $skipHead = true;
+        $skipFoot = true;
+
         foreach ($data as $k => $v) {
             if (!$headPassed) {
                 foreach ($this->_headers as $value) {
@@ -248,6 +251,10 @@ class DataTableToken extends BaseToken
                         $thead->getElementsByTagName("tr")->item(0),
                         "<th>{$value}</th>"
                     );
+
+                    if ($skipHead && strlen($value) > 0) {
+                        $skipHead = false;
+                    }
                 }
 
                 $headPassed = true;
@@ -284,15 +291,25 @@ class DataTableToken extends BaseToken
                         $tfoot->getElementsByTagName("tr")->item(0),
                         "<th>{$value}</th>"
                     );
+
+                    if ($skipFoot && strlen($value) > 0) {
+                        $skipFoot = false;
+                    }
                 }
 
                 $footPassed = true;
             }
         }
 
-        $domElement->appendChild($thead);
+        if (!$skipHead) {
+            $domElement->appendChild($thead);
+        }
+
         $domElement->appendChild($tbody);
-        $domElement->appendChild($tfoot);
+
+        if (!$skipFoot) {
+            $domElement->appendChild($tfoot);
+        }
 
         return $domElement;
     }
