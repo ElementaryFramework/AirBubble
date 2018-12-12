@@ -125,25 +125,22 @@ class IncludeToken extends BaseToken
         $this->parse();
 
         $templatePath = null;
-        $dataContext = array();
         $resolver = $this->_template->getResolver();
+        $dataModel = $this->_template->getDataModel();
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof PathAttribute) {
                 $templatePath = Utilities::evaluate($attr->getValue(), $resolver);
             } elseif ($attr instanceof GenericAttribute) {
-                array_push($dataContext, $attr);
+                $data = Utilities::evaluate($attr->getValue(), $resolver);
+                $dataModel->set($attr->getName(), $data);
             }
         }
 
         $innerBubble = new AirBubble();
 
-        foreach ($dataContext as $var) {
-            $data = Utilities::evaluate($var->getValue(), $resolver);
-            $innerBubble->set($var->getName(), $data);
-        }
-
         $includeTemplate = $innerBubble->createTemplateFromFile($templatePath);
+        $includeTemplate->setDataModel($dataModel);
         $includeDOM = $includeTemplate->render();
 
         $includeString = $includeDOM->saveXML($includeDOM->documentElement);
