@@ -102,7 +102,7 @@ class Utilities
         $config = AirBubble::getConfiguration();
         $extension = "." . $config->getTemplateExtension();
         $path = strrpos($path, $extension) ? $path : $path . $extension;
-        return realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
+        return file_exists($path) ? $path : realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
     }
 
     public static function populateData(string $templatePart, DataResolver $resolver)
