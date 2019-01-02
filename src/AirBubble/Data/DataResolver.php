@@ -133,9 +133,18 @@ class DataResolver
                         $part = $isIndexedArray ? $matches[1] : $part;
 
                         if (!property_exists($data, $part) && !method_exists($data, $part)) {
-                            throw new PropertyNotFoundException($part, $query);
+                            if ($data instanceof IAirBubbleDynamicDataContext) {
+                                if ($isMethodCall) {
+                                    $data = $data->callBubbleMethod($part, $params);
+                                } else if ($isIndexedArray) {
+                                    $data = $data->getBubbleIndexedProperty($part, $matches[2]);
+                                } else {
+                                    $data = $data->getBubbleProperty($part);
+                                }
+                            } else throw new PropertyNotFoundException($part, $query);
+                        } else {
+                            $data = $isIndexedArray ? ($data->$part)[$matches[2]] : (is_callable(array($data, $part)) ? call_user_func_array(array($data, $part), $params) : $data->$part);
                         }
-                        $data = $isIndexedArray ? ($data->$part)[$matches[2]] : (is_callable(array($data, $part)) ? call_user_func_array(array($data, $part), $params) : $data->$part);
                     } else {
                         throw new InvalidQueryException($query);
                     }

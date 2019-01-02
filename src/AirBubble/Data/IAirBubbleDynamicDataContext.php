@@ -33,16 +33,45 @@
 namespace ElementaryFramework\AirBubble\Data;
 
 /**
- * AirBubble's template data context interface
+ * AirBubble's template dynamic data context interface
  *
- * Represents an interface to create a template's data context
+ * Represents an interface to create a dynamic template's data context. Dynamic data context are able to call methods
+ * access properties which are not defined in the object.
  *
  * @category Data
  * @package  AirBubble
  * @author   Axel Nana <ax.lnana@outlook.com>
  * @license  MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
- * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Data/IAirBubbleDataContext
+ * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Data/IAirBubbleDynamicDataContext
  */
-interface IAirBubbleDataContext
+interface IAirBubbleDynamicDataContext extends IAirBubbleDataContext
 {
+    /**
+     * Method called when the DataResolver try to find a dynamic property.
+     *
+     * @param string $name The name of the dynamic property.
+     *
+     * @return mixed
+     */
+    function getBubbleProperty(string $name);
+
+    /**
+     * Method called when the DataResolver try to find a dynamic property.
+     *
+     * @param string $name  The name of the dynamic indexed property.
+     * @param mixed  $index The index to acces in the property.
+     *
+     * @return mixed
+     */
+    function getBubbleIndexedProperty(string $name, $index);
+
+    /**
+     * Method called when the DataResolver try to find a dynamic method.
+     *
+     * @param string $name       The name of the dynamic method.
+     * @param array  $parameters The set of paramters of the dynamic method.
+     *
+     * @return mixed
+     */
+    function callBubbleMethod(string $name, array $parameters);
 }
