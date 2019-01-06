@@ -65,7 +65,11 @@ class Utilities
         $children  = $element->childNodes;
 
         foreach ($children as $child) {
-            $innerHTML .= $element->ownerDocument->saveXML($child);
+            if ($element instanceof \DOMDocument) {
+                $innerHTML .= $element->saveXML($child);
+            } else {
+                $innerHTML .= $element->ownerDocument->saveXML($child);
+            }
         }
 
         return $innerHTML;
