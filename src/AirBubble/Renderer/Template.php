@@ -111,6 +111,7 @@ class Template implements IParser, IRenderer
     private function __construct(string $content, DataModel $model)
     {
         $this->setDataModel($model);
+        $content = Utilities::processExpressions($content, $this->_dataResolver);
         $this->_templateString = $this->_mergeWithParent($content);
     }
 
