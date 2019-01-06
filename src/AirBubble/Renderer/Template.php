@@ -188,7 +188,7 @@ class Template implements IParser, IRenderer
 
     private function _processInclusions()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
@@ -235,7 +235,7 @@ class Template implements IParser, IRenderer
 
     private function _preParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
@@ -281,7 +281,7 @@ class Template implements IParser, IRenderer
 
     private function _postParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
