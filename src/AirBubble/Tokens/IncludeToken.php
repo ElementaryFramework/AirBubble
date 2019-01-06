@@ -138,9 +138,9 @@ class IncludeToken extends BaseToken
         }
 
         $innerBubble = new AirBubble();
+        $innerBubble->setDataModel($dataModel);
 
         $includeTemplate = $innerBubble->createTemplateFromFile($templatePath);
-        $includeTemplate->setDataModel($dataModel);
         $includeDOM = $includeTemplate->render();
 
         $includeString = $includeDOM->saveXML($includeDOM->documentElement);
