@@ -105,12 +105,17 @@ class Utilities
         return file_exists($path) ? $path : realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
     }
 
-    public static function populateData(string $templatePart, DataResolver $resolver)
+    public static function processExpressions(string $templatePart, DataResolver $resolver)
     {
         $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) use ($resolver) {
             $res = EvalSandBox::eval($m[1], $resolver);
             return self::toString($res);
         }, $templatePart);
+    }
+
+    public static function populateData(string $templatePart, DataResolver $resolver)
+    {
+        self::processExpressions($templatePart, $resolver);
 
         do {
             $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
