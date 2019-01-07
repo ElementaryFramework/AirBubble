@@ -90,16 +90,20 @@ class DataResolver
     public function resolve(string $query)
     {
         if (!array_key_exists($query, $this->_resolvedBackup)) {
-            $parts = explode(".", $query);
+            $temp = explode(".", $query);
 
-            preg_match("#(\\w+)\\[([\w\d]+)\\]#", $parts[0], $matches);
-            $isIndexedArray = count($matches) > 0;
+            $parts = array();
+            foreach ($temp as $index => $part) {
+                preg_match("/([\w\d]+)\\[([\w\d]+)\\]/", $part, $matches);
+                $isIndexedArray = count($matches) > 0;
 
-            if ($isIndexedArray) {
-                array_shift($parts);
-                array_unshift($parts, $matches[2]);
-                array_unshift($parts, $matches[1]);
+                if ($isIndexedArray) {
+                    array_push($parts, $matches[1], $matches[2]);
+                } else {
+                    array_push($parts, $part);
+                }
             }
+            unset($temp);
 
             $data = $this->_model->get($parts[0])->getValue();
             $parts = array_slice($parts, 1);
