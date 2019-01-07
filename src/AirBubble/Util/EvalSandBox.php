@@ -33,6 +33,7 @@
 namespace ElementaryFramework\AirBubble\Util;
 
 use ElementaryFramework\AirBubble\Data\DataResolver;
+use ElementaryFramework\AirBubble\Data\FunctionsContext;
 use ElementaryFramework\AirBubble\Exception\InvalidDataException;
 use ElementaryFramework\AirBubble\Exception\UnknownFunctionException;
 use ElementaryFramework\AirBubble\Renderer\Template;
@@ -55,7 +56,7 @@ class EvalSandBox
      *
      * @var string
      */
-    private static $_functionContext = "\ElementaryFramework\AirBubble\Data\FunctionsContext";
+    private static $_functionContext = FunctionsContext::class;
 
     /**
      * Changes the current functions context.
@@ -67,7 +68,7 @@ class EvalSandBox
      */
     public static function setFunctionsContext(string $context): void
     {
-        if (!is_subclass_of($context, "\ElementaryFramework\AirBubble\Data\FunctionsContext")) {
+        if (!is_subclass_of($context, FunctionsContext::class)) {
             throw new InvalidDataException(
                 "The given functions context is not a subclass of \ElementaryFramework\AirBubble\Data\FunctionsContext."
             );
@@ -82,7 +83,7 @@ class EvalSandBox
         $context = self::$_functionContext;
 
         return eval(
-            "{$parsed[0]} \$context = new {$context}; return {$parsed[1]};"
+            "{$parsed[0]} \$context = new {$context}; return ({$parsed[1]});"
         );
     }
 
