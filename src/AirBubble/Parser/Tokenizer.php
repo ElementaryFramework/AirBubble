@@ -80,7 +80,8 @@ class Tokenizer
 
     private function _load(string $content, DataResolver $resolver)
     {
-        $content = Utilities::processExpressions($content, $resolver);
+        try { $content = Utilities::processExpressions($content, $resolver); }
+        catch (\Exception $e) { }
         $this->_dom = Utilities::createDOMFromString($content);
 
         if ($this->_dom->documentElement->nodeName !== "b:bubble") {
