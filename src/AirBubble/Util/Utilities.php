@@ -65,7 +65,11 @@ class Utilities
         $children  = $element->childNodes;
 
         foreach ($children as $child) {
-            $innerHTML .= $element->ownerDocument->saveXML($child);
+            if ($element instanceof \DOMDocument) {
+                $innerHTML .= $element->saveXML($child);
+            } else {
+                $innerHTML .= $element->ownerDocument->saveXML($child);
+            }
         }
 
         return $innerHTML;
@@ -105,12 +109,19 @@ class Utilities
         return file_exists($path) ? $path : realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
     }
 
-    public static function populateData(string $templatePart, DataResolver $resolver)
+    public static function processExpressions(string $templatePart, DataResolver $resolver)
     {
         $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) use ($resolver) {
             $res = EvalSandBox::eval($m[1], $resolver);
             return self::toString($res);
         }, $templatePart);
+
+        return $templatePart;
+    }
+
+    public static function populateData(string $templatePart, DataResolver $resolver)
+    {
+        $templatePart = self::processExpressions($templatePart, $resolver);
 
         do {
             $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {

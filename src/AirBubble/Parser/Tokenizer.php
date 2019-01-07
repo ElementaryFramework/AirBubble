@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Parser;
 
+use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Exception\ParseErrorException;
 use ElementaryFramework\AirBubble\Exception\UnknownTokenException;
 use ElementaryFramework\AirBubble\Tokens\IToken;
@@ -77,8 +78,10 @@ class Tokenizer
         $this->_tokens = new TokensList();
     }
 
-    private function _load(string $content)
+    private function _load(string $content, DataResolver $resolver)
     {
+        try { $content = Utilities::processExpressions($content, $resolver); }
+        catch (\Exception $e) { }
         $this->_dom = Utilities::createDOMFromString($content);
 
         if ($this->_dom->documentElement->nodeName !== "b:bubble") {
@@ -129,10 +132,10 @@ class Tokenizer
         return $token;
     }
 
-    public static function tokenize(string $content): Tokenizer
+    public static function tokenize(string $content, DataResolver $resolver): Tokenizer
     {
         $parser = new Tokenizer;
-        $parser->_load($content);
+        $parser->_load($content, $resolver);
 
         $parser->_tokenize();
 

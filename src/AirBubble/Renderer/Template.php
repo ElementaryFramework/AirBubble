@@ -111,6 +111,8 @@ class Template implements IParser, IRenderer
     private function __construct(string $content, DataModel $model)
     {
         $this->setDataModel($model);
+        try { $content = Utilities::processExpressions($content, $this->_dataResolver); }
+        catch (\Exception $e) { }
         $this->_templateString = $this->_mergeWithParent($content);
     }
 
@@ -188,7 +190,7 @@ class Template implements IParser, IRenderer
 
     private function _processInclusions()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
@@ -235,7 +237,7 @@ class Template implements IParser, IRenderer
 
     private function _preParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
@@ -281,7 +283,7 @@ class Template implements IParser, IRenderer
 
     private function _postParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString));
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
