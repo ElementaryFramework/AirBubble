@@ -89,21 +89,30 @@ class DataResolver
      */
     public function resolve(string $query)
     {
+        static $indexedPattern = "/([\w\d]+)\\[([\w\d]+)\\]/";
+
         if (!array_key_exists($query, $this->_resolvedBackup)) {
-            $temp = explode(".", $query);
 
-            $parts = array();
-            foreach ($temp as $index => $part) {
-                preg_match("/([\w\d]+)\\[([\w\d]+)\\]/", $part, $matches);
-                $isIndexedArray = count($matches) > 0;
+            do {
+                $temp = explode(".", $query);
+                $found = false;
 
-                if ($isIndexedArray) {
-                    array_push($parts, $matches[1], $matches[2]);
-                } else {
+                $parts = array();
+                foreach ($temp as $index => $part) {
+                    preg_match($indexedPattern, $part, $matches);
+                    $isIndexedArray = count($matches) > 0;
+
+                    if ($isIndexedArray) {
+                        $found = true;
+                        $part = preg_replace($indexedPattern, "{$matches[1]}.{$matches[2]}", $part);
+                    }
+
                     array_push($parts, $part);
                 }
-            }
-            unset($temp);
+                unset($temp);
+
+                $query = implode(".", $parts);
+            } while ($found);
 
             $data = $this->_model->get($parts[0])->getValue();
             $parts = array_slice($parts, 1);
