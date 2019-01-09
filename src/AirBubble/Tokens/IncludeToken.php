@@ -130,9 +130,9 @@ class IncludeToken extends BaseToken
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof PathAttribute) {
-                $templatePath = Utilities::evaluate($attr->getValue(), $resolver);
+                $templatePath = Utilities::populateData($attr->getValue(), $resolver);
             } elseif ($attr instanceof GenericAttribute) {
-                $data = Utilities::evaluate($attr->getValue(), $resolver);
+                $data = Utilities::populateData($attr->getValue(), $resolver);
                 $dataModel->set($attr->getName(), $data);
             }
         }
