@@ -136,8 +136,6 @@ class Template implements IParser, IRenderer
     public function render(): \DOMNode
     {
         $bubbleOutput = new \DOMDocument("1.0", "UTF-8");
-        $bubbleOutput->formatOutput = true;
-        $bubbleOutput->preserveWhiteSpace = true;
 
         $this->parse();
 
@@ -149,8 +147,6 @@ class Template implements IParser, IRenderer
         foreach ($this->_dom->documentElement->childNodes as $child) {
             $bubbleOutput->appendChild($bubbleOutput->importNode($child, true));
         }
-
-        $bubbleOutput->normalize();
 
         return $bubbleOutput;
     }
