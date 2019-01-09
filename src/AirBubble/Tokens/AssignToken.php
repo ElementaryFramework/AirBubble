@@ -38,6 +38,8 @@ use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Exception\ParseErrorException;
 use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
 
+use ElementaryFramework\AirBubble\Util\Utilities;
+
 /**
  * Assign Token
  *
@@ -127,11 +129,13 @@ class AssignToken extends BaseToken
     {
         $var = $value = null;
 
+        $resolver = $this->_template->getResolver();
+
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof VarAttribute) {
                 $var = $attr->getValue();
             } elseif ($attr instanceof ValueAttribute) {
-                $value = $attr->getValue();
+                $value = Utilities::evaluate($attr->getValue(), $resolver);
             }
         }
 
