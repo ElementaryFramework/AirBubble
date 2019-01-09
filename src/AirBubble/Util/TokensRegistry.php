@@ -33,6 +33,7 @@
 namespace ElementaryFramework\AirBubble\Util;
 
 use ElementaryFramework\AirBubble\Tokens\BlockToken;
+use ElementaryFramework\AirBubble\Tokens\AssignToken;
 use ElementaryFramework\AirBubble\Tokens\ConditionToken;
 use ElementaryFramework\AirBubble\Tokens\DataTableToken;
 use ElementaryFramework\AirBubble\Tokens\ForeachToken;
@@ -65,6 +66,7 @@ abstract class TokensRegistry
      * @var array
      */
     private static $_registry = array(
+        "b:assign" => AssignToken::class,
         "b:include"  => IncludeToken::class,
         "b:text" => TextToken::class,
         "b:inputLabel" => InputLabelToken::class,
