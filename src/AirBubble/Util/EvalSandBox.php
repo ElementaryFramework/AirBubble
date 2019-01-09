@@ -101,6 +101,16 @@ class EvalSandBox
             }, $code);
         } while (preg_match(Template::DATA_MODEL_QUERY_REGEX, $code, $matches));
 
+        // Process some "static" functions
+        $code = preg_replace_callback("/@isset\\(([a-zA-Z0-9._\\[\\]'\"\/ ]+)\\)/U", function ($m) use ($resolver) {
+            try {
+                $resolver->resolve(trim($m[1], " '\""));
+                return "true";
+            } catch (\Exception $e) {
+                return "false";
+            }
+        }, $code);
+
         $code = preg_replace_callback("/@(\w+)\\(/U", function ($m) {
             if (!method_exists(self::$_functionContext, $m[1])) {
                 throw new UnknownFunctionException($m[1]);
