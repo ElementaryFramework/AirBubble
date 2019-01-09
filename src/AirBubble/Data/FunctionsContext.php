@@ -50,9 +50,9 @@ use ElementaryFramework\AirBubble\AirBubble;
 class FunctionsContext
 {
     /**
-     * Changes a string to uppercase
+     * Changes a string to uppercase.
      *
-     * @param string $var The string to change
+     * @param string $var The string to change.
      *
      * @return string
      */
@@ -68,9 +68,9 @@ class FunctionsContext
     }
 
     /**
-     * Changes a string to lowercase
+     * Changes a string to lowercase.
      *
-     * @param string $var The string to change
+     * @param string $var The string to change.
      *
      * @return string
      */
@@ -86,9 +86,9 @@ class FunctionsContext
     }
 
     /**
-     * Changes a string to uppercase
+     * Changes a string's first character to uppercase.
      *
-     * @param string $var The string to change
+     * @param string $var The string to capitalize the first character.
      *
      * @return string
      */
@@ -101,7 +101,7 @@ class FunctionsContext
      * Insert space (or optionally a given string)
      * between all characters of the string.
      *
-     * @param string $val   The string to spacify
+     * @param string $var   The string to spacify
      * @param string $space The string to inject
      *
      * @return string
@@ -129,10 +129,10 @@ class FunctionsContext
      * Truncates a string to the given length.
      *
      * @param string  $var         The string to truncate.
-     * @param integer $length      The length.
+     * @param int     $length      The length.
      * @param string  $trunk       The string to insert at the end.
-     * @param boolean $trunkWord   Define if we break words (false) or not (true).
-     * @param boolean $trunkMiddle Define if we truncate at the middle of the string (true) or not (false).
+     * @param bool    $trunkWord   Define if we break words (false) or not (true).
+     * @param bool    $trunkMiddle Define if we truncate at the middle of the string (true) or not (false).
      *
      * @return string
      */
