@@ -52,11 +52,15 @@ class ConditionToken extends BaseToken
 {
     /**
      * Token name.
+     *
+     * @var string
      */
     public const NAME = "condition";
 
     /**
      * Token type.
+     *
+     * @var string
      */
     public const TYPE = POST_PARSE_TOKEN;
 
@@ -67,10 +71,15 @@ class ConditionToken extends BaseToken
      */
     private $_conditionsMap = array();
 
+    /**
+     * The path to the else statement, if any.
+     *
+     * @var string|null
+     */
     private $_elsePath;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @throws UnexpectedTokenException When the element has attributes.
      */
@@ -84,7 +93,7 @@ class ConditionToken extends BaseToken
     /**
      * Gets the type of this token.
      *
-     * @return integer
+     * @return int
      */
     public function getType(): int
     {
@@ -139,11 +148,11 @@ class ConditionToken extends BaseToken
                                         break;
 
                                     default:
-                                        throw new UnexpectedTokenException("Only the \"condition\" attribute is allowed with the if statement.");
+                                        throw new UnexpectedTokenException("Only the \"condition\" attribute is allowed with the if/elseif statement.");
                                 }
                             }
                         } else {
-                            throw new ElementNotFoundException("The \"condition\" attribute is required with the if statement.");
+                            throw new ElementNotFoundException("The \"condition\" attribute is required with the if/elseif statement.");
                         }
                         break;
 
@@ -157,7 +166,7 @@ class ConditionToken extends BaseToken
                         }
 
                         if ($elseFound) {
-                            throw new UnexpectedTokenException("The \"condition\" attribute must have only one else statement.");
+                            throw new UnexpectedTokenException("The \"b:condition\" element must have only one else statement.");
                         }
 
                         $this->_elsePath = $element->getNodePath();
