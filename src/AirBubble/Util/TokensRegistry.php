@@ -81,12 +81,12 @@ abstract class TokensRegistry
     /**
      * Adds a token to the registry.
      *
-     * The name must be a valid element name and have to
-     * start with the <b>b:</b> namespace.
-     * The token must be the class name, which
-     * implements the <b>IToken</b> interface.
+     * The name must be a valid element name and have to start with
+     * a namespace registered in the {@see NamespacesRegistry}.
+     * The token must be the class name, which implements the
+     * <b>IToken</b> interface.
      *
-     * @example <code>TokensRegistry::add("b:myTag", MyTagToken::class)</code>
+     * @example <code>TokensRegistry::add("ns:myTag", MyTagToken::class)</code>
      *
      * @param string $elementName The token's name
      * @param string $elementClass The class' name
@@ -129,7 +129,7 @@ abstract class TokensRegistry
      *
      * @param string $elementName The name of the element.
      *
-     * @return boolean
+     * @return bool
      */
     public static function exists(string $elementName): bool
     {
