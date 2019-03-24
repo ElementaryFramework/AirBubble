@@ -102,7 +102,9 @@ class TemplateExtender
 
         foreach ($nodes as $node) {
             if ($node->hasAttribute("name") && array_key_exists($name = $node->getAttribute("name"), $blocks)) {
-                Utilities::insertHTMLBefore(Utilities::innerHTML($blocks[$name]), $node);
+                $wrapper = $node->hasAttribute("wrapper") ? $node->getAttribute("wrapper") : null;
+                $inner = $wrapper !== null ? "<{$wrapper}>" . Utilities::innerHTML($blocks[$name]) . "</{$wrapper}>" : Utilities::innerHTML($blocks[$name]);
+                Utilities::insertHTMLBefore($inner, $node);
                 $node->parentNode->removeChild($node);
             }
         }
