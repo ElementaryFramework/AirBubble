@@ -78,8 +78,9 @@ class Utilities
     public static function appendHTML(\DOMNode $parent, string $html)
     {
         $tmpDoc = self::createDOMFromString("<wrapper xmlns:b=\"" . NamespacesRegistry::get("b:") . "\">{$html}</wrapper>");
+        $tmpDoc = $tmpDoc instanceof \DOMDocument ? $tmpDoc->documentElement : $tmpDoc;
 
-        foreach ($tmpDoc->documentElement->childNodes as $node) {
+        foreach ($tmpDoc->childNodes as $node) {
             $node = $parent->ownerDocument->importNode($node, true);
             $parent->appendChild($node);
         }
