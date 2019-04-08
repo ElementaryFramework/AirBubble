@@ -154,7 +154,15 @@ class DataResolver
                                 } else {
                                     $data = $data->getBubbleProperty($part);
                                 }
-                            } else throw new PropertyNotFoundException($part, $query);
+                            } else {
+                                $accessorName = "get" . ucfirst($part);
+                                if (!method_exists($data, $accessorName)) {
+                                    throw new PropertyNotFoundException($part, $query);
+                                } else {
+                                    $data = call_user_func(array($data, $accessorName));
+                                    $data = $isIndexedArray ? $data[$matches[2]] : $data;
+                                }
+                            }
                         } else {
                             $data = $isIndexedArray ? ($data->$part)[$matches[2]] : (is_callable(array($data, $part)) ? call_user_func_array(array($data, $part), $params) : $data->$part);
                         }
