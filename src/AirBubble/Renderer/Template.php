@@ -38,10 +38,10 @@ use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Exception\TemplateNotFoundException;
 use ElementaryFramework\AirBubble\Parser\IParser;
 use ElementaryFramework\AirBubble\Parser\Tokenizer;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\OutputIndenter;
 use ElementaryFramework\AirBubble\Util\TemplateExtender;
 use ElementaryFramework\AirBubble\Util\Utilities;
-use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * Template file
@@ -206,6 +206,8 @@ class Template implements IParser, IRenderer
                 } else {
                     array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
                 }
+
+                break;
             }
         }
 
@@ -252,6 +254,8 @@ class Template implements IParser, IRenderer
                 } else {
                     array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
                 }
+
+                break;
             }
         }
 
@@ -298,6 +302,8 @@ class Template implements IParser, IRenderer
                 } else {
                     array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
                 }
+
+                break;
             }
         }
 
