@@ -62,7 +62,7 @@ class ConditionToken extends BaseToken
      *
      * @var string
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const TYPE = POST_PARSE_TOKEN;
 
     /**
      * Associates a node to a condition.
