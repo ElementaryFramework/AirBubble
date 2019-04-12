@@ -239,11 +239,13 @@ class DataTableToken extends BaseToken
         $skipHead = true;
         $skipFoot = true;
 
+        $charsFilter = Template::DATA_MODEL_QUERY_CHARS_FILTER;
+
         foreach ($data as $k => $v) {
             if (!$headPassed) {
                 foreach ($this->_headers as $value) {
-                    $value = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                        return preg_replace("#^\\\$\\{{$itemVar}\b#U", "\${{$iterator}[{$k}]", $m[0]);
+                    $value = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v, $charsFilter) {
+                        return preg_replace("#^\\\$\\{({$charsFilter}*){$itemVar}\b#U", "\${\$1{$iterator}[{$k}]", $m[0]);
                     }, $value);
 
                     if ($itemKey !== null) {
