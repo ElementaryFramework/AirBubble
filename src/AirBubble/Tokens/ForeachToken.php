@@ -140,11 +140,13 @@ class ForeachToken extends BaseToken
 
         $domElement = $this->_document->createElement("b:outputWrapper", "");
 
+        $charsFilter = Template::DATA_MODEL_QUERY_CHARS_FILTER;
+
         foreach ($data as $k => $v) {
             $iterationHTML = preg_replace_callback(
                 Template::DATA_MODEL_QUERY_REGEX,
-                function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v) {
-                    return str_replace($itemVar, "{$iterator}.{$k}", $m[0]);
+                function (array $m) use ($itemVar, $itemKey, $iterator, $k, $v, $charsFilter) {
+                    return preg_replace("#^\\\$\\{({$charsFilter}*){$itemVar}\b#U", "\${\$1{$iterator}[{$k}]", $m[0]);
                 },
                 $innerHTML
             );
