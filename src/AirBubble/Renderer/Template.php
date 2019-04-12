@@ -38,6 +38,7 @@ use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Exception\TemplateNotFoundException;
 use ElementaryFramework\AirBubble\Parser\IParser;
 use ElementaryFramework\AirBubble\Parser\Tokenizer;
+use ElementaryFramework\AirBubble\Parser\TokensList;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\OutputIndenter;
 use ElementaryFramework\AirBubble\Util\TemplateExtender;
@@ -57,7 +58,9 @@ use ElementaryFramework\AirBubble\Util\Utilities;
  */
 class Template implements IParser, IRenderer
 {
-    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{([a-zA-Z0-9,._\\(\\)\\[\\]'\"\/ ]+)\\}/U";
+    public const DATA_MODEL_QUERY_CHARS_FILTER = "[a-zA-Z0-9,._\\(\\)\\[\\]'\"\/ ]";
+
+    public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{(" . self::DATA_MODEL_QUERY_CHARS_FILTER . "+)\\}/U";
 
     public const EXPRESSION_REGEX = "/\\{\\{(.+)\\}\\}/U";
 
