@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
@@ -93,7 +94,7 @@ class DataTableToken extends BaseToken
                         break;
 
                     default:
-                        throw new UnexpectedTokenException("The \"b:dataTable\" element can only have value, var or key for attributes.");
+                        $this->_attributes->add(new GenericAttribute($attr, $this->_document));
                 }
             }
         }
@@ -194,6 +195,8 @@ class DataTableToken extends BaseToken
         $itemVar = null;
         $itemKey = null;
 
+        $domElement = $this->_document->createElement("table", "");
+
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof ValueAttribute) {
                 $iterator = $attr->getValue();
@@ -201,6 +204,8 @@ class DataTableToken extends BaseToken
                 $itemVar = $attr->getValue();
             } elseif ($attr instanceof KeyAttribute) {
                 $itemKey = $attr->getValue();
+            } else {
+                $domElement->setAttribute($attr->getName(), $attr->getValue());
             }
         }
 
@@ -219,8 +224,6 @@ class DataTableToken extends BaseToken
             // TODO: Create an exception for this
             throw new \Exception("Non-iterable data provided to the data table.");
         }
-
-        $domElement = $this->_document->createElement("table", "");
 
         $thead = $this->_document->createElement("thead", "");
         $thead->appendChild($this->_document->createElement("tr", ""));
