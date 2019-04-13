@@ -34,15 +34,17 @@ namespace ElementaryFramework\AirBubble\Tokens;
 
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\ItemsAttribute;
+use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 use ElementaryFramework\AirBubble\Attributes\LabelAttribute;
+use ElementaryFramework\AirBubble\Attributes\SelectedAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\SelectItemsList;
 use ElementaryFramework\AirBubble\Util\Utilities;
-use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 
 /**
  * Select Items Token
@@ -117,6 +119,7 @@ class SelectItemsToken extends BaseToken
         $itemKey = null;
         $itemValue = null;
         $itemLabel = null;
+        $itemSelected = null;
 
         foreach ($this->_attributes as $attr) {
             if ($attr instanceof ItemsAttribute) {
@@ -129,6 +132,8 @@ class SelectItemsToken extends BaseToken
                 $itemValue = $attr->getValue();
             } elseif ($attr instanceof LabelAttribute) {
                 $itemLabel = $attr->getValue();
+            } elseif ($attr instanceof SelectedAttribute) {
+                $itemSelected = $attr->getValue();
             } else {
                 array_push($attributesBuffer, $attr);
             }
@@ -163,15 +168,26 @@ class SelectItemsToken extends BaseToken
             throw new ElementNotFoundException("The \"" . VarAttribute::NAME . "\" attribute is required in \"b:selectItems\".");
         }
 
-        $innerHTML = "<option value='{$itemValue}'>{$itemLabel}</option>";
+        if ($itemSelected !== null) {
+            try {
+                $itemSelected = $this->_template->getResolver()->resolve($itemSelected);
+            } catch (InvalidQueryException $_) {
+            }
+
+            $innerHTML = "<option value='{$itemValue}' {{ {$itemValue} === {$itemSelected} ? 'selected=\"true\"' : '' }}>{$itemLabel}</option>";
+        } else {
+            $innerHTML = "<option value='{$itemValue}'>{$itemLabel}</option>";
+        }
 
         $domElement = $this->_document->createElement("select", "");
+
+        $charsFilter = Template::DATA_MODEL_QUERY_CHARS_FILTER;
 
         foreach ($data as $k => $v) {
             $iterationHTML = preg_replace_callback(
                 Template::DATA_MODEL_QUERY_REGEX,
-                function (array $m) use ($itemVar, $itemValue, $iterator, $k, $v) {
-                    return str_replace($itemVar, "{$iterator}.{$k}", $m[0]);
+                function (array $m) use ($itemVar, $itemValue, $iterator, $k, $v, $charsFilter) {
+                    return preg_replace("#^\\\$\\{({$charsFilter}*){$itemVar}\b#U", "\${\$1{$iterator}[{$k}]", $m[0]);
                 },
                 $innerHTML
             );
@@ -179,6 +195,8 @@ class SelectItemsToken extends BaseToken
             if ($itemKey !== null) {
                 $iterationHTML = preg_replace("/\\\$\\{{$itemKey}\\}/U", $k, $iterationHTML);
             }
+
+            $iterationHTML = Utilities::processExpressions($iterationHTML, $this->_template->getResolver());
 
             Utilities::appendHTML($domElement, $iterationHTML);
         }
@@ -219,6 +237,10 @@ class SelectItemsToken extends BaseToken
 
                     case LabelAttribute::NAME:
                         $this->_attributes->add(new LabelAttribute($attr, $this->_document));
+                        break;
+
+                    case SelectedAttribute::NAME:
+                        $this->_attributes->add(new SelectedAttribute($attr, $this->_document));
                         break;
 
                     default:
