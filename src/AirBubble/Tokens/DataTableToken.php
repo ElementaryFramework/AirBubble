@@ -152,7 +152,7 @@ class DataTableToken extends BaseToken
                 foreach ($element->childNodes as $e) {
                     switch ($e->nodeName) {
                         case "#text":
-                            continue;
+                            break;
 
                         case "head":
                             $head = Utilities::innerHTML($e);
