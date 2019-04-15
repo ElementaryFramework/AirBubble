@@ -175,6 +175,6 @@ class DataResolver
             $this->_resolvedBackup[$query] = $data;
         }
 
-        return $this->_resolvedBackup[$query];
+        return is_string($this->_resolvedBackup[$query]) ? htmlentities($this->_resolvedBackup[$query]) : $this->_resolvedBackup[$query];
     }
 }
