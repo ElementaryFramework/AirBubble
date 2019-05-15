@@ -1,29 +1,36 @@
 {
-    "name": "elementaryframework/air-bubble",
+  "name": "elementaryframework/air-bubble",
   "description": "AirBubble - A PHP template engine with an XML-like syntax.",
-    "type": "library",
-    "require-dev": {
-        "phpunit/phpunit": "^7"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Axel Nana",
-            "email": "ax.lnana@outlook.com"
-        }
-    ],
-    "require": {
-        "php": "^7.1.10"
-    },
-    "keywords": [
-        "template",
-        "engine",
-        "mvc",
-        "views"
-    ],
-    "autoload": {
-        "psr-4": {
-            "ElementaryFramework\\AirBubble\\": "src/AirBubble/"
-        }
+  "type": "library",
+  "require-dev": {
+    "phpunit/phpunit": "^7"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Axel Nana",
+      "email": "ax.lnana@outlook.com"
     }
+  ],
+  "require": {
+    "php": "^7.1.10",
+    "ext-dom": "*",
+    "ext-libxml": "*"
+  },
+  "keywords": [
+    "template",
+    "engine",
+    "mvc",
+    "views"
+  ],
+  "autoload": {
+    "psr-4": {
+      "ElementaryFramework\\AirBubble\\": "src/AirBubble/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ElementaryFramework\\AirBubble\\Tests\\": "tests/suite/"
+    }
+  }
 }
