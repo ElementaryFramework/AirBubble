@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\ItemsAttribute;
 use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
@@ -42,6 +43,8 @@ use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 use ElementaryFramework\AirBubble\Exception\InvalidDataException;
 use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
+use ElementaryFramework\AirBubble\Exception\KeyNotFoundException;
+use ElementaryFramework\AirBubble\Exception\PropertyNotFoundException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\SelectItemsList;
 use ElementaryFramework\AirBubble\Util\Utilities;
@@ -65,18 +68,23 @@ class SelectItemsToken extends BaseToken
     public const NAME = "selectItems";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 2;
 
     /**
      * Gets the type of this token.
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -87,6 +95,14 @@ class SelectItemsToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -102,15 +118,15 @@ class SelectItemsToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
      *
      * @throws ElementNotFoundException
      * @throws InvalidDataException
-     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
-     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
-     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
+     * @throws InvalidQueryException
+     * @throws KeyNotFoundException
+     * @throws PropertyNotFoundException
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $attributesBuffer = array();
 
@@ -147,7 +163,7 @@ class SelectItemsToken extends BaseToken
         $data = $this->_template->getResolver()->resolve($iterator);
 
         if (!is_iterable($data)) {
-            throw new InvalidDataException("Non-iterable data provided to a foreach loop.");
+            throw new InvalidDataException("Non-iterable data provided to a selectItems token.");
         }
 
         if ($data instanceof SelectItemsList) {

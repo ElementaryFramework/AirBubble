@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 
@@ -61,11 +62,18 @@ class AssignToken extends BaseToken
     public const NAME = "assign";
 
     /**
-     * Token type.
+     * Token stage.
      *
      * @var int
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     *
+     * @var int
+     */
+    public const PRIORITY = HIGHEST_TOKEN_PRIORITY;
 
     /**
      * @inheritdoc
@@ -95,9 +103,9 @@ class AssignToken extends BaseToken
      *
      * @return int
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -108,6 +116,16 @@ class AssignToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * Gets the priority of this token.
+     *
+     * @return int
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -123,9 +141,10 @@ class AssignToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
+     * @throws ParseErrorException
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $var = $value = null;
 

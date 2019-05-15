@@ -51,14 +51,26 @@ use ElementaryFramework\AirBubble\Renderer\Template;
 interface IToken extends IParser, IRenderer
 {
     /**
-     * Gets the type of the token.
+     * Gets the parse stage of the token.
      *
-     * A token can take only two kind of
-     * type: PRE_PARSE_TOKEN and POST_PARSE_TOKEN.
+     * A token can take only four kinds of parse stages:
+     * - PRE_PARSE_TOKEN
+     * - POST_PARSE_TOKEN
+     * - ALL_STATE_PARSE_TOKEN
+     * - INCLUDE_STATE_TOKEN.
      *
-     * @return integer
+     * @return int
      */
-    public function getType(): int;
+    public function getStage(): int;
+
+    /**
+     * Gets the parse priority of this token.
+     *
+     * Priority is between 0 and 99 inclusive.
+     *
+     * @return int
+     */
+    public function getPriority(): int;
 
     /**
      * Gets the token's name.
@@ -81,5 +93,10 @@ interface IToken extends IParser, IRenderer
      */
     public function getAttributes(): AttributesList;
 
+    /**
+     * Sets the template which will render this token
+     *
+     * @param Template &$template The template
+     */
     public function setTemplate(Template &$template);
 }

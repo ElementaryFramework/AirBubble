@@ -41,14 +41,14 @@ use ElementaryFramework\AirBubble\Util\KeyValuePair;
  * are rendered after the data model
  * parse process.
  */
-define('POST_PARSE_TOKEN', 0);
+define('POST_PARSE_TOKEN_STAGE', 0);
 
 /**
  * Define the type of token which
  * are rendered before the data model
  * parse process.
  */
-define('PRE_PARSE_TOKEN', 1);
+define('PRE_PARSE_TOKEN_STAGE', 1);
 
 /**
  * Define the type of token which
@@ -56,14 +56,26 @@ define('PRE_PARSE_TOKEN', 1);
  * the state of the data model
  * parse process.
  */
-define('ALL_STATE_PARSE_TOKEN', 2);
+define('UNDEFINED_PARSE_TOKEN_STAGE', 2);
+
+/**
+ * Define the value for the highest priority
+ * of a token.
+ */
+define('HIGHEST_TOKEN_PRIORITY', 0);
+
+/**
+ * Define the value for the lowest priority
+ * of a token.
+ */
+define('LOWEST_TOKEN_PRIORITY', 99);
 
 /**
  * Define the type of token which
  * are processed when the parser
  * retrieve inclusions.
  */
-define('INCLUDE_STATE_TOKEN', 3);
+define('INCLUDE_TOKEN_STAGE', 3);
 
 /**
  * Define if this configuration of PHP
@@ -98,6 +110,11 @@ class AirBubble
      */
     private static $_bubbleConfig;
 
+    /**
+     * Sets the configuration to use for every instances of AirBubble.
+     *
+     * @param AirBubbleConfig $config The AirBubble config to use
+     */
     public static function setConfiguration(AirBubbleConfig $config)
     {
         self::$_bubbleConfig = $config;

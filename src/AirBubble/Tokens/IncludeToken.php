@@ -32,10 +32,10 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\AirBubble;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\PathAttribute;
-use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\Utilities;
 
 /**
@@ -57,9 +57,14 @@ class IncludeToken extends BaseToken
     public const NAME = "include";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = INCLUDE_STATE_TOKEN;
+    public const STAGE = INCLUDE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = HIGHEST_TOKEN_PRIORITY;
 
     /**
      * @inheritdoc
@@ -86,9 +91,9 @@ class IncludeToken extends BaseToken
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -99,6 +104,14 @@ class IncludeToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -114,13 +127,9 @@ class IncludeToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
-     *
-     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
-     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
-     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
+     * @return DOMNode|null
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $this->parse();
 

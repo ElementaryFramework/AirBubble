@@ -32,14 +32,20 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
+use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
+use ElementaryFramework\AirBubble\Exception\KeyNotFoundException;
+use ElementaryFramework\AirBubble\Exception\PropertyNotFoundException;
 use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\Utilities;
+use Exception;
 
 
 /**
@@ -61,10 +67,20 @@ class DataTableToken extends BaseToken
     public const NAME = "dataTable";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
 
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 3;
+
+    /**
+     * Table headers content.
+     *
+     * @var array
+     */
     private $_headers = array();
 
     /**
@@ -74,22 +90,30 @@ class DataTableToken extends BaseToken
      */
     private $_columns = array();
 
+    /**
+     * Table footers content.
+     *
+     * @var array
+     */
     private $_footers = array();
 
+    /**
+     * @inheritDoc
+     */
     protected function _parseAttributes()
     {
         if ($this->_element->hasAttributes()) {
             foreach ($this->_element->attributes as $attr) {
                 switch ($attr->nodeName) {
-                    case "key":
+                    case KeyAttribute::NAME:
                         $this->_attributes->add(new KeyAttribute($attr, $this->_document));
                         break;
 
-                    case "var":
+                    case VarAttribute::NAME:
                         $this->_attributes->add(new VarAttribute($attr, $this->_document));
                         break;
 
-                    case "value":
+                    case ValueAttribute::NAME:
                         $this->_attributes->add(new ValueAttribute($attr, $this->_document));
                         break;
 
@@ -105,9 +129,9 @@ class DataTableToken extends BaseToken
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -118,6 +142,14 @@ class DataTableToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -135,6 +167,7 @@ class DataTableToken extends BaseToken
 
         $this->_attributes->parse();
 
+        /** @var DOMNode $element */
         foreach ($this->_element->childNodes as $element) {
             if ($element->nodeName === "#text") {
                 continue;
@@ -181,15 +214,15 @@ class DataTableToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
      *
      * @throws ElementNotFoundException
-     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
-     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
-     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
-     * @throws \Exception
+     * @throws InvalidQueryException
+     * @throws KeyNotFoundException
+     * @throws PropertyNotFoundException
+     * @throws InvalidDataException
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $iterator = null;
         $itemVar = null;
@@ -221,8 +254,7 @@ class DataTableToken extends BaseToken
         $data = $this->_template->getResolver()->resolve($iterator);
 
         if (!is_iterable($data)) {
-            // TODO: Create an exception for this
-            throw new \Exception("Non-iterable data provided to the data table.");
+            throw new InvalidDataException("Non-iterable data provided to the data table.");
         }
 
         $thead = $this->_document->createElement("thead", "");

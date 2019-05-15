@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\AirBubble\Parser;
 
+use DOMDocument;
+use DOMElement;
 use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Exception\ParseErrorException;
 use ElementaryFramework\AirBubble\Exception\UnknownTokenException;
@@ -39,6 +41,7 @@ use ElementaryFramework\AirBubble\Tokens\IToken;
 use ElementaryFramework\AirBubble\Util\TokensRegistry;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\Utilities;
+use Exception;
 
 /**
  * Template tokenizer
@@ -64,7 +67,7 @@ class Tokenizer
     /**
      * DOM document object.
      *
-     * @var \DOMDocument
+     * @var DOMDocument
      */
     private $_dom;
 
@@ -81,7 +84,7 @@ class Tokenizer
     private function _load(string $content, DataResolver $resolver)
     {
         try { $content = Utilities::processExpressions($content, $resolver); }
-        catch (\Exception $e) { }
+        catch (Exception $e) { }
         $this->_dom = Utilities::createDOMFromString($content);
 
         if ($this->_dom->documentElement->nodeName !== "b:bubble") {
@@ -96,8 +99,9 @@ class Tokenizer
         }
     }
 
-    private function _tokenizeElement(\DOMElement $element)
+    private function _tokenizeElement(DOMElement $element)
     {
+        /** @var DOMElement $e */
         foreach ($element->childNodes as $e) {
             if ($e->hasChildNodes()) {
                 $this->_tokenizeElement($e);
@@ -112,7 +116,7 @@ class Tokenizer
         }
     }
 
-    private function _toToken(\DOMElement $element): IToken
+    private function _toToken(DOMElement $element): IToken
     {
         $token = null;
 
@@ -145,7 +149,7 @@ class Tokenizer
     /**
      * Gets DOM document object.
      *
-     * @return  \DOMDocument
+     * @return  DOMDocument
      */
     public function getDom()
     {

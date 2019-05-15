@@ -32,11 +32,15 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\KeyAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 use ElementaryFramework\AirBubble\Exception\InvalidDataException;
+use ElementaryFramework\AirBubble\Exception\InvalidQueryException;
+use ElementaryFramework\AirBubble\Exception\KeyNotFoundException;
+use ElementaryFramework\AirBubble\Exception\PropertyNotFoundException;
 use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\Utilities;
@@ -60,18 +64,23 @@ class ForeachToken extends BaseToken
     public const NAME = "foreach";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 2;
 
     /**
      * Gets the type of this token.
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -82,6 +91,14 @@ class ForeachToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -97,15 +114,15 @@ class ForeachToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
      *
      * @throws ElementNotFoundException
      * @throws InvalidDataException
-     * @throws \ElementaryFramework\AirBubble\Exception\InvalidQueryException
-     * @throws \ElementaryFramework\AirBubble\Exception\KeyNotFoundException
-     * @throws \ElementaryFramework\AirBubble\Exception\PropertyNotFoundException
+     * @throws InvalidQueryException
+     * @throws KeyNotFoundException
+     * @throws PropertyNotFoundException
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $iterator = null;
         $itemVar = null;
@@ -171,15 +188,15 @@ class ForeachToken extends BaseToken
         if ($this->_element->hasAttributes()) {
             foreach ($this->_element->attributes as $attr) {
                 switch ($attr->nodeName) {
-                    case "key":
+                    case KeyAttribute::NAME:
                         $this->_attributes->add(new KeyAttribute($attr, $this->_document));
                         break;
 
-                    case "var":
+                    case VarAttribute::NAME:
                         $this->_attributes->add(new VarAttribute($attr, $this->_document));
                         break;
 
-                    case "value":
+                    case ValueAttribute::NAME:
                         $this->_attributes->add(new ValueAttribute($attr, $this->_document));
                         break;
 

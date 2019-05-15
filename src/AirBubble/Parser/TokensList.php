@@ -269,11 +269,70 @@ final class TokensList implements \Iterator, \SeekableIterator, \Countable, \Ser
         unset($tok);
     }
 
+    /**
+     * Sets the template for each tokens in this list.
+     *
+     * @param Template $template
+     */
     public function setTemplate(Template &$template)
     {
         foreach ($this->_tokens as &$tok) {
             $tok->setTemplate($template);
         }
         unset($tok);
+    }
+
+    /**
+     * Checks if a token with the given stage exists in the list.
+     *
+     * @param int $tokenStage The token stage to search
+     *
+     * @return bool
+     */
+    public function hasTokenWithStage(int $tokenStage)
+    {
+        foreach ($this->_tokens as $token)
+            if ($token->getStage() === $tokenStage)
+                return true;
+
+        return false;
+    }
+
+    /**
+     * Returns the lowest token priority for the given token
+     * stage in the list of tokens.
+     *
+     * @param int $tokenStage The token stage to search
+     *
+     * @return int
+     */
+    public function getLowestPriorityForStage(int $tokenStage)
+    {
+        $lowest = HIGHEST_TOKEN_PRIORITY;
+
+        foreach ($this->_tokens as $token)
+            if ($token->getStage() === $tokenStage && $token->getPriority() > $lowest)
+                $lowest = $token->getPriority();
+
+        return $lowest;
+    }
+
+    /**
+     * Returns the highest token priority for the given token
+     * stage in the list of tokens.
+     *
+     * @param int $tokenStage The token stage to search
+     *
+     * @return int
+     */
+    public function getHighestPriorityForStage(int $tokenStage)
+    {
+        $highest = LOWEST_TOKEN_PRIORITY;
+
+        foreach ($this->_tokens as $token)
+            if ($token->getStage() === $tokenStage && $token->getPriority() < $highest)
+                $highest = $token->getPriority();
+
+        return $highest;
     }
 }

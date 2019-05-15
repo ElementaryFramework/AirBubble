@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\FromAttribute;
 use ElementaryFramework\AirBubble\Attributes\ToAttribute;
 use ElementaryFramework\AirBubble\Attributes\VarAttribute;
@@ -58,18 +59,23 @@ class ForToken extends BaseToken
     public const NAME = "for";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 2;
 
     /**
      * Gets the type of this token.
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -80,6 +86,14 @@ class ForToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -95,11 +109,11 @@ class ForToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
      *
      * @throws ElementNotFoundException
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $itemEnd = null;
         $itemVar = null;
@@ -169,7 +183,7 @@ class ForToken extends BaseToken
 
                     default:
                         throw new UnexpectedTokenException(
-                            "The \"b:for\" loop can only have \"var\", \"from\" or \"to\" for attributes."
+                            "The \"b:for\" loop can only have \"" . VarAttribute::NAME . "\", \"" . FromAttribute::NAME . "\" or \"" . ToAttribute::NAME . "\" for attributes."
                         );
                 }
             }

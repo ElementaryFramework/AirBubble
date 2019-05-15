@@ -51,9 +51,14 @@ class BlockToken extends BaseToken
     public const NAME = "block";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 1;
 
     /**
      * @inheritdoc
@@ -67,9 +72,9 @@ class BlockToken extends BaseToken
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -80,6 +85,14 @@ class BlockToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**

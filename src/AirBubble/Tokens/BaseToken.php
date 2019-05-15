@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
 use ElementaryFramework\AirBubble\Parser\AttributesList;
 use ElementaryFramework\AirBubble\Renderer\Template;
 
@@ -88,6 +89,8 @@ abstract class BaseToken implements IToken
      *
      * @param \DOMElement $element
      * @param \DOMDocument $document
+     *
+     * @throws UnexpectedTokenException
      */
     public function __construct(\DOMElement $element, \DOMDocument &$document)
     {
@@ -103,6 +106,8 @@ abstract class BaseToken implements IToken
      * Parses attributes for this element.
      *
      * @return mixed|void
+     *
+     * @throws UnexpectedTokenException
      */
     abstract protected function _parseAttributes();
 

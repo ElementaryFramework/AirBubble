@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
 use ElementaryFramework\AirBubble\Attributes\ElementAttribute;
 use ElementaryFramework\AirBubble\Attributes\GenericAttribute;
 use ElementaryFramework\AirBubble\Attributes\ValueAttribute;
@@ -55,20 +56,28 @@ class TextToken extends BaseToken
     public const NAME = "text";
 
     /**
-     * Token type.
+     * Token stage.
      */
-    public const TYPE = PRE_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
 
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = 2;
+
+    /**
+     * @inheritDoc
+     */
     protected function _parseAttributes()
     {
         if ($this->_element->hasAttributes()) {
             foreach ($this->_element->attributes as $attr) {
                 switch ($attr->nodeName) {
-                    case "element":
+                    case ElementAttribute::NAME:
                         $this->_attributes->add(new ElementAttribute($attr, $this->_document));
                         break;
 
-                    case "value":
+                    case ValueAttribute::NAME:
                         $this->_attributes->add(new ValueAttribute($attr, $this->_document));
                         break;
 
@@ -85,9 +94,9 @@ class TextToken extends BaseToken
      *
      * @return integer
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -98,6 +107,14 @@ class TextToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -113,9 +130,9 @@ class TextToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode
+     * @return DOMNode|null
      */
-    public function render(): \DOMNode
+    public function render(): ?DOMNode
     {
         $attributesBuffer = array();
         $wrapper = null;

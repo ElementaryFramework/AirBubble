@@ -32,6 +32,10 @@
 
 namespace ElementaryFramework\AirBubble\Renderer;
 
+use DOMDocument;
+use DOMImplementation;
+use DOMNode;
+use DOMXPath;
 use ElementaryFramework\AirBubble\AirBubble;
 use ElementaryFramework\AirBubble\Data\DataModel;
 use ElementaryFramework\AirBubble\Data\DataResolver;
@@ -43,6 +47,7 @@ use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\OutputIndenter;
 use ElementaryFramework\AirBubble\Util\TemplateExtender;
 use ElementaryFramework\AirBubble\Util\Utilities;
+use Exception;
 
 /**
  * Template file
@@ -69,7 +74,7 @@ class Template implements IParser, IRenderer
     /**
      * The DOM document of this template.
      *
-     * @var \DOMDocument
+     * @var DOMDocument
      */
     private $_dom;
 
@@ -83,7 +88,7 @@ class Template implements IParser, IRenderer
     /**
      * Document xPath object.
      *
-     * @var \DOMXPath
+     * @var DOMXPath
      */
     private $_xPath;
 
@@ -115,7 +120,7 @@ class Template implements IParser, IRenderer
     {
         $this->setDataModel($model);
         try { $content = Utilities::processExpressions($content, $this->_dataResolver); }
-        catch (\Exception $e) { }
+        catch (Exception $e) { }
         $this->_templateString = $this->_mergeWithParent($content);
     }
 
@@ -136,14 +141,14 @@ class Template implements IParser, IRenderer
         }
     }
 
-    public function render(): \DOMNode
+    public function render(): DOMNode
     {
-        $bubbleOutput = new \DOMDocument("1.0", "UTF-8");
+        $bubbleOutput = new DOMDocument("1.0", "UTF-8");
 
         $this->parse();
 
         if ($this->_dom->doctype) {
-            $domImp = new \DOMImplementation();
+            $domImp = new DOMImplementation();
             $bubbleOutput->appendChild($domImp->createDocumentType($this->_dom->doctype->name, $this->_dom->doctype->publicId, $this->_dom->doctype->systemId));
         }
 
@@ -162,7 +167,7 @@ class Template implements IParser, IRenderer
             $indenter = new OutputIndenter();
             try {
                 $output = $indenter->indent($output);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
 
@@ -180,7 +185,7 @@ class Template implements IParser, IRenderer
         $this->_tokensList = $parser->getTokens();
         $this->_tokensList->setTemplate($this);
 
-        $this->_xPath = new \DOMXPath($this->_dom);
+        $this->_xPath = new DOMXPath($this->_dom);
 
         foreach (NamespacesRegistry::registry() as $ns => $uri) {
             $this->_xPath->registerNamespace(rtrim($ns, ':'), $uri);
@@ -194,44 +199,51 @@ class Template implements IParser, IRenderer
         $toReplace = array();
         $toDelete = array();
 
-        $found = false;
+        $highest = $this->_tokensList->getHighestPriorityForStage(INCLUDE_TOKEN_STAGE);
+        $lowest = $this->_tokensList->getLowestPriorityForStage(INCLUDE_TOKEN_STAGE);
 
-        foreach ($this->_tokensList as $k => $token) {
-            if ($token->getType() === INCLUDE_STATE_TOKEN) {
-                $token->parse();
+        for ($priority = $highest; $priority <= $lowest; $priority++) {
+            $found = false;
 
-                $found = !$found ? $token->getType() === INCLUDE_STATE_TOKEN : $found;
+            foreach ($this->_tokensList as $k => $token) {
+                if ($token->getStage() === INCLUDE_TOKEN_STAGE && $token->getPriority() === $priority) {
+                    $token->parse();
 
-                $res = $token->render();
+                    $found = true;
 
-                if ($res === null) {
-                    array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                    $res = $token->render();
+
+                    if ($res === null) {
+                        array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                    } else {
+                        array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    }
+
+                    break;
+                }
+            }
+
+            foreach ($toReplace as $replacement) {
+                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                    foreach ($replacement[0]->childNodes as $child) {
+                        $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+                    }
+                    $replacement[1]->parentNode->removeChild($replacement[1]);
                 } else {
-                    array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
                 }
-
-                break;
             }
-        }
 
-        foreach ($toReplace as $replacement) {
-            if ($replacement[0]->nodeName === "b:outputWrapper") {
-                foreach ($replacement[0]->childNodes as $child) {
-                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
-                }
-                $replacement[1]->parentNode->removeChild($replacement[1]);
-            } else {
-                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+            foreach ($toDelete as $delete) {
+                $delete->parentNode->removeChild($delete);
             }
-        }
 
-        foreach ($toDelete as $delete) {
-            $delete->parentNode->removeChild($delete);
+            if ($found) break;
         }
 
         $this->_templateString = $this->_dom->saveXML();
 
-        if ($found) {
+        if ($this->_tokensList->hasTokenWithStage(INCLUDE_TOKEN_STAGE)) {
             $this->_processInclusions();
         }
     }
@@ -243,43 +255,51 @@ class Template implements IParser, IRenderer
         $toReplace = array();
         $toDelete = array();
 
-        $found = false;
+        $highest = $this->_tokensList->getHighestPriorityForStage(PRE_PARSE_TOKEN_STAGE);
+        $lowest = $this->_tokensList->getLowestPriorityForStage(PRE_PARSE_TOKEN_STAGE);
 
-        foreach ($this->_tokensList as $k => $token) {
-            if ($token->getType() === PRE_PARSE_TOKEN || $token->getType() === ALL_STATE_PARSE_TOKEN) {
-                $token->parse();
+        for ($priority = $highest; $priority <= $lowest; $priority++) {
+            $found = false;
 
-                $found = !$found ? $token->getType() === PRE_PARSE_TOKEN : $found;
+            foreach ($this->_tokensList as $k => $token) {
+                if (($token->getStage() === PRE_PARSE_TOKEN_STAGE || $token->getStage() === UNDEFINED_PARSE_TOKEN_STAGE) && $token->getPriority() === $priority) {
+                    $token->parse();
 
-                $res = $token->render();
-                if ($res === null) {
-                    array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                    $found = true;
+
+                    $res = $token->render();
+
+                    if ($res === null) {
+                        array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                    } else {
+                        array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    }
+
+                    break;
+                }
+            }
+
+            foreach ($toReplace as $replacement) {
+                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                    foreach ($replacement[0]->childNodes as $child) {
+                        $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+                    }
+                    $replacement[1]->parentNode->removeChild($replacement[1]);
                 } else {
-                    array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
                 }
-
-                break;
             }
-        }
 
-        foreach ($toReplace as $replacement) {
-            if ($replacement[0]->nodeName === "b:outputWrapper") {
-                foreach ($replacement[0]->childNodes as $child) {
-                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
-                }
-                $replacement[1]->parentNode->removeChild($replacement[1]);
-            } else {
-                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+            foreach ($toDelete as $delete) {
+                $delete->parentNode->removeChild($delete);
             }
-        }
 
-        foreach ($toDelete as $delete) {
-            $delete->parentNode->removeChild($delete);
+            if ($found) break;
         }
 
         $this->_templateString = $this->_dom->saveXML();
 
-        if ($found) {
+        if ($this->_tokensList->hasTokenWithStage(PRE_PARSE_TOKEN_STAGE)) {
             $this->_preParse();
         }
     }
@@ -291,43 +311,51 @@ class Template implements IParser, IRenderer
         $toReplace = array();
         $toDelete = array();
 
-        $found = false;
 
-        foreach ($this->_tokensList as $k => $token) {
-            if ($token->getType() === POST_PARSE_TOKEN || $token->getType() === ALL_STATE_PARSE_TOKEN) {
-                $token->parse();
+        $highest = $this->_tokensList->getHighestPriorityForStage(POST_PARSE_TOKEN_STAGE);
+        $lowest = $this->_tokensList->getLowestPriorityForStage(POST_PARSE_TOKEN_STAGE);
 
-                $found = !$found ? $token->getType() === POST_PARSE_TOKEN : $found;
+        for ($priority = $highest; $priority <= $lowest; $priority++) {
+            $found = false;
 
-                $res = $token->render();
-                if ($res === null) {
-                    array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+            foreach ($this->_tokensList as $k => $token) {
+                if (($token->getStage() === POST_PARSE_TOKEN_STAGE || $token->getStage() === UNDEFINED_PARSE_TOKEN_STAGE) && $token->getPriority() === $priority) {
+                    $token->parse();
+
+                    $found = true;
+
+                    $res = $token->render();
+                    if ($res === null) {
+                        array_push($toDelete, $this->_xPath->query($token->getPath())->item(0));
+                    } else {
+                        array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    }
+
+                    break;
+                }
+            }
+
+            foreach ($toReplace as $replacement) {
+                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                    foreach ($replacement[0]->childNodes as $child) {
+                        $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+                    }
+                    $replacement[1]->parentNode->removeChild($replacement[1]);
                 } else {
-                    array_push($toReplace, array($res, $this->_xPath->query($token->getPath())->item(0)));
+                    $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
                 }
-
-                break;
             }
-        }
 
-        foreach ($toReplace as $replacement) {
-            if ($replacement[0]->nodeName === "b:outputWrapper") {
-                foreach ($replacement[0]->childNodes as $child) {
-                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
-                }
-                $replacement[1]->parentNode->removeChild($replacement[1]);
-            } else {
-                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+            foreach ($toDelete as $delete) {
+                $delete->parentNode->removeChild($delete);
             }
-        }
 
-        foreach ($toDelete as $delete) {
-            $delete->parentNode->removeChild($delete);
+            if ($found) break;
         }
 
         $this->_templateString = $this->_dom->saveXML();
 
-        if ($found) {
+        if ($this->_tokensList->hasTokenWithStage(POST_PARSE_TOKEN_STAGE)) {
             $this->_postParse();
         }
     }

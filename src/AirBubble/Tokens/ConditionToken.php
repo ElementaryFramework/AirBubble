@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\AirBubble\Tokens;
 
+use DOMNode;
+use DOMXPath;
 use ElementaryFramework\AirBubble\Attributes\ConditionAttribute;
 use ElementaryFramework\AirBubble\Exception\ElementNotFoundException;
 use ElementaryFramework\AirBubble\Exception\UnexpectedTokenException;
@@ -58,11 +60,16 @@ class ConditionToken extends BaseToken
     public const NAME = "condition";
 
     /**
-     * Token type.
+     * Token stage.
      *
      * @var string
      */
-    public const TYPE = POST_PARSE_TOKEN;
+    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+
+    /**
+     * Token priority.
+     */
+    public const PRIORITY = LOWEST_TOKEN_PRIORITY;
 
     /**
      * Associates a node to a condition.
@@ -95,9 +102,9 @@ class ConditionToken extends BaseToken
      *
      * @return int
      */
-    public function getType(): int
+    public function getStage(): int
     {
-        return self::TYPE;
+        return self::STAGE;
     }
 
     /**
@@ -108,6 +115,14 @@ class ConditionToken extends BaseToken
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return self::PRIORITY;
     }
 
     /**
@@ -127,8 +142,9 @@ class ConditionToken extends BaseToken
                 switch ($element->nodeName) {
                     case "if":
                     case "elseif":
+                    case "elif":
                         if ($elseFound) {
-                            throw new UnexpectedTokenException("Found another if/elseif statement after the else statement.");
+                            throw new UnexpectedTokenException("Found another if/elseif/elif statement after the else statement.");
                         }
 
                         if ($element->nodeName === "if") {
@@ -137,22 +153,22 @@ class ConditionToken extends BaseToken
                             }
                             $ifFound = true;
                         } elseif (!$ifFound) {
-                            throw new UnexpectedTokenException("Found elseif statement without or before if statement.");
+                            throw new UnexpectedTokenException("Found elseif/elif statement without or before if statement.");
                         }
 
                         if ($element->hasAttributes()) {
                             foreach ($element->attributes as $attr) {
                                 switch ($attr->nodeName) {
-                                    case "condition":
+                                    case ConditionAttribute::NAME:
                                         $this->_conditionsMap[$element->getNodePath()] = new ConditionAttribute($attr, $this->_document);
                                         break;
 
                                     default:
-                                        throw new UnexpectedTokenException("Only the \"condition\" attribute is allowed with the if/elseif statement.");
+                                        throw new UnexpectedTokenException("Only the \"condition\" attribute is allowed with the if/elseif/elif statement.");
                                 }
                             }
                         } else {
-                            throw new ElementNotFoundException("The \"condition\" attribute is required with the if/elseif statement.");
+                            throw new ElementNotFoundException("The \"condition\" attribute is required with the if/elseif/elif statement.");
                         }
                         break;
 
@@ -183,9 +199,9 @@ class ConditionToken extends BaseToken
     /**
      * Render the token.
      *
-     * @return \DOMNode|null
+     * @return DOMNode|null
      */
-    public function render(): ?\DOMNode
+    public function render(): ?DOMNode
     {
         $truePath = null;
 
@@ -200,7 +216,7 @@ class ConditionToken extends BaseToken
         }
 
         $domElement = null;
-        $xPath = new \DOMXPath($this->_document);
+        $xPath = new DOMXPath($this->_document);
 
         $resultPath = $truePath !== null ? $truePath : ($this->_elsePath !== null ? $this->_elsePath : null);
 
