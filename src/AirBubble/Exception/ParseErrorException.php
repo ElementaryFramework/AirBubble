@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
- * @version   GIT: 1.1.0
+ * @version   1.4.0
  * @link      http://bubble.na2axl.tk
  */
 
