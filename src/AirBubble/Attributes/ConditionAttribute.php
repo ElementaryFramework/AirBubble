@@ -37,9 +37,9 @@ use ElementaryFramework\AirBubble\Util\Utilities;
 use ElementaryFramework\AirBubble\Util\EvalSandBox;
 
 /**
- * For Attribute
+ * Condition Attribute
  *
- * Represent the <b>for</b> attribute.
+ * Represent the <b>condition</b> attribute.
  *
  * @category Attributes
  * @package  AirBubble
