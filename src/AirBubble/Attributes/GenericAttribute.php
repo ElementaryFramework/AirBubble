@@ -121,9 +121,9 @@ class GenericAttribute implements IAttribute
     /**
      * Renders this attribute.
      *
-     * @return \DOMNode
+     * @return \DOMNode|null
      */
-    public function render(): \DOMNode
+    public function render(): ?\DOMNode
     {
         return $this->_domAttribute;
     }
