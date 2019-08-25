@@ -77,7 +77,11 @@ class Utilities
 
     public static function appendHTML(\DOMNode $parent, string $html)
     {
-        $tmpDoc = self::createDOMFromString("<wrapper xmlns:b=\"" . NamespacesRegistry::get("b:") . "\">{$html}</wrapper>");
+        $namespaceString = '';
+        foreach (NamespacesRegistry::registry() as $key => $value)
+            $namespaceString .= 'xmlns:' . trim($key, ':') . "=\"{$value}\" ";
+
+        $tmpDoc = self::createDOMFromString("<wrapper {$namespaceString}>{$html}</wrapper>");
         $tmpDoc = $tmpDoc instanceof \DOMDocument ? $tmpDoc->documentElement : $tmpDoc;
 
         foreach ($tmpDoc->childNodes as $node) {
@@ -88,7 +92,11 @@ class Utilities
 
     public static function insertHTMLBefore(string $html, \DOMNode $refNode)
     {
-        $tmpDoc = self::createDOMFromString("<wrapper xmlns:b=\"" . NamespacesRegistry::get("b:") . "\">{$html}</wrapper>");
+        $namespaceString = '';
+        foreach (NamespacesRegistry::registry() as $key => $value)
+            $namespaceString .= 'xmlns:' . trim($key, ':') . "=\"{$value}\" ";
+
+        $tmpDoc = self::createDOMFromString("<wrapper {$namespaceString}>{$html}</wrapper>");
 
         foreach ($tmpDoc->documentElement->childNodes as $node) {
             $node = $refNode->ownerDocument->importNode($node, true);
