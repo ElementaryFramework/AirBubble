@@ -33,9 +33,12 @@
 namespace ElementaryFramework\AirBubble\Renderer;
 
 use DOMDocument;
+use DOMElement;
 use DOMImplementation;
 use DOMNode;
 use DOMXPath;
+use Exception;
+
 use ElementaryFramework\AirBubble\AirBubble;
 use ElementaryFramework\AirBubble\Data\DataModel;
 use ElementaryFramework\AirBubble\Data\DataResolver;
@@ -47,7 +50,8 @@ use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\OutputIndenter;
 use ElementaryFramework\AirBubble\Util\TemplateExtender;
 use ElementaryFramework\AirBubble\Util\Utilities;
-use Exception;
+use ElementaryFramework\AirBubble\Util\DirectivesRegistry;
+use ElementaryFramework\AirBubble\Directives\BaseDirective;
 
 /**
  * Template file
@@ -133,8 +137,11 @@ class Template implements IParser, IRenderer
     public function parse()
     {
         if (!$this->_parsed) {
+            $this->_applyDirectives($this->_dom->documentElement);
             $this->_processInclusions();
+            $this->_applyDirectives($this->_dom->documentElement);
             $this->_preParse();
+            $this->_applyDirectives($this->_dom->documentElement);
             $this->_populateData();
             $this->_postParse();
             $this->_parsed = true;
@@ -144,6 +151,8 @@ class Template implements IParser, IRenderer
     public function render(): DOMNode
     {
         $bubbleOutput = new DOMDocument("1.0", "UTF-8");
+
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $this->parse();
 
@@ -165,10 +174,8 @@ class Template implements IParser, IRenderer
 
         if (AirBubble::getConfiguration()->isIndentOutput()) {
             $indenter = new OutputIndenter();
-            try {
-                $output = $indenter->indent($output);
-            } catch (Exception $e) {
-            }
+            try { $output = $indenter->indent($output); }
+            catch (Exception $e) { }
         }
 
         return $output;
@@ -190,6 +197,70 @@ class Template implements IParser, IRenderer
         foreach (NamespacesRegistry::registry() as $ns => $uri) {
             $this->_xPath->registerNamespace(rtrim($ns, ':'), $uri);
         }
+    }
+
+    private function _applyDirectives(?DOMElement $element)
+    {
+        if ($element === null)
+            return;
+
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
+
+        $toReplace = array();
+        $toDelete = array();
+
+        /** @var DOMElement $child */
+        foreach ($element->childNodes as $child) {
+            if ($child instanceof \DOMText) continue;
+
+            $element = $this->_xPath->query($child->getNodePath())->item(0);
+
+            foreach (DirectivesRegistry::registry() as $key => $class) {
+                list($ns, $attrName) = explode(':', $key);
+                if ($element->hasAttributeNS(NamespacesRegistry::get("{$ns}:"), $attrName)) {
+                    $node = $element->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName);
+
+                    /** @var BaseDirective $attr */
+                    $attr = new $class(
+                        $node,
+                        $element,
+                        $this->_dom,
+                        $this
+                    );
+
+                    $res = $attr->process();
+
+                    if ($res === null) {
+                        array_push($toDelete, $element);
+                        break;
+                    } else {
+                        array_push($toReplace, array($res, $element));
+                    }
+                }
+            }
+
+           if (!in_array($element, $toDelete) && $element->hasChildNodes())
+                $this->_applyDirectives($element);
+        }
+
+        foreach ($toReplace as $replacement) {
+            if ($replacement[0]->nodeName === "b:outputWrapper") {
+                foreach ($replacement[0]->childNodes as $child) {
+                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+                }
+                $replacement[1]->parentNode->removeChild($replacement[1]);
+            } else {
+                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+            }
+        }
+
+        foreach ($toDelete as $delete) {
+            $delete->parentNode->removeChild($delete);
+        }
+
+        $this->_templateString = $this->_dom->saveXML();
+
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
     }
 
     private function _processInclusions()
