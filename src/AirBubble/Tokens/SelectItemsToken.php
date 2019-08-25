@@ -187,8 +187,7 @@ class SelectItemsToken extends BaseToken
         if ($itemSelected !== null) {
             try {
                 $itemSelected = $this->_template->getResolver()->resolve($itemSelected);
-            } catch (InvalidQueryException $_) {
-            }
+            } catch (InvalidQueryException $_) {}
 
             $innerHTML = "<option value='{$itemValue}' {{ {$itemValue} === {$itemSelected} ? 'selected=\"true\"' : '' }}>{$itemLabel}</option>";
         } else {

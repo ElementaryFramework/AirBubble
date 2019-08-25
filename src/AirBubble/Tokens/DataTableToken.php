@@ -162,7 +162,7 @@ class DataTableToken extends BaseToken
     public function parse()
     {
         if (!$this->_element->hasChildNodes()) {
-            throw new ElementNotFoundException("The \"b:condition\" element must have at least one if statement.");
+            throw new ElementNotFoundException("The \"b:dataTable\" element must have at least one column statement.");
         }
 
         $this->_attributes->parse();
