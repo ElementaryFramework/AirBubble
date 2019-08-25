@@ -58,7 +58,7 @@ class TextToken extends BaseToken
     /**
      * Token stage.
      */
-    public const STAGE = PRE_PARSE_TOKEN_STAGE;
+    public const STAGE = POST_PARSE_TOKEN_STAGE;
 
     /**
      * Token priority.
