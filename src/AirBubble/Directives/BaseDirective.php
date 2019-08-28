@@ -79,7 +79,7 @@ abstract class BaseDirective
     public function __construct(DOMAttr $attr, DOMElement &$element, DOMDocument &$document, Template &$template)
     {
         $this->_domAttr = $attr;
-        $this->_domElement = $element;
+        $this->_domElement = $element->cloneNode(true);
         $this->_domDocument = $document;
         $this->template = $template;
     }

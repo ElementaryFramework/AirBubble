@@ -230,7 +230,7 @@ class Template implements IParser, IRenderer
                     /** @var BaseDirective $attr */
                     $attr = new $class(
                         $node,
-                        $element->cloneNode(true),
+                        $element,
                         $this->_dom,
                         $this
                     );
