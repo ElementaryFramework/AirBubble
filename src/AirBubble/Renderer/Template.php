@@ -129,7 +129,7 @@ class Template implements IParser, IRenderer
         catch (Error $e) { throw $e; }
         catch (TemplateException $e) { throw $e; }
         catch (Exception $e) { }
-        $this->_templateString = $this->_mergeWithParent($content);
+        $this->_setTemplateString($this->_mergeWithParent($content));
     }
 
     public function setDataModel(DataModel $model)
@@ -155,8 +155,6 @@ class Template implements IParser, IRenderer
     public function render(): DOMNode
     {
         $bubbleOutput = new DOMDocument("1.0", "UTF-8");
-
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $this->parse();
 
@@ -190,6 +188,12 @@ class Template implements IParser, IRenderer
         file_put_contents($path, $this->outputString());
     }
 
+    private function _setTemplateString(string $template)
+    {
+        $this->_templateString = $template;
+        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
+    }
+
     private function _loadParser(Tokenizer $parser)
     {
         $this->_dom = $parser->getDom();
@@ -203,18 +207,16 @@ class Template implements IParser, IRenderer
         }
     }
 
-    private function _applyDirectives(?DOMElement $element)
+    private function _applyDirectives(?DOMElement $root)
     {
-        if ($element === null)
+        if ($root === null)
             return;
-
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
 
         $toReplace = array();
         $toDelete = array();
 
         /** @var DOMElement $child */
-        foreach ($element->childNodes as $child) {
+        foreach ($root->childNodes as $child) {
             if ($child instanceof \DOMText) continue;
 
             $element = $this->_xPath->query($child->getNodePath())->item(0);
@@ -223,11 +225,12 @@ class Template implements IParser, IRenderer
                 list($ns, $attrName) = explode(':', $key);
                 if ($element->hasAttributeNS(NamespacesRegistry::get("{$ns}:"), $attrName)) {
                     $node = $element->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName);
+                    $element->removeAttributeNode($node);
 
                     /** @var BaseDirective $attr */
                     $attr = new $class(
                         $node,
-                        $element,
+                        $element->cloneNode(true),
                         $this->_dom,
                         $this
                     );
@@ -262,15 +265,11 @@ class Template implements IParser, IRenderer
             $delete->parentNode->removeChild($delete);
         }
 
-        $this->_templateString = $this->_dom->saveXML();
-
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
+        $this->_setTemplateString($this->_dom->saveXML());
     }
 
     private function _processInclusions()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
-
         $toReplace = array();
         $toDelete = array();
 
@@ -316,7 +315,7 @@ class Template implements IParser, IRenderer
             if ($found) break;
         }
 
-        $this->_templateString = $this->_dom->saveXML();
+        $this->_setTemplateString($this->_dom->saveXML());
 
         if ($this->_tokensList->hasTokenWithStage(INCLUDE_TOKEN_STAGE)) {
             $this->_processInclusions();
@@ -325,8 +324,6 @@ class Template implements IParser, IRenderer
 
     private function _preParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
-
         $toReplace = array();
         $toDelete = array();
 
@@ -372,7 +369,7 @@ class Template implements IParser, IRenderer
             if ($found) break;
         }
 
-        $this->_templateString = $this->_dom->saveXML();
+        $this->_setTemplateString($this->_dom->saveXML());
 
         if ($this->_tokensList->hasTokenWithStage(PRE_PARSE_TOKEN_STAGE)) {
             $this->_preParse();
@@ -381,11 +378,8 @@ class Template implements IParser, IRenderer
 
     private function _postParse()
     {
-        $this->_loadParser(Tokenizer::tokenize($this->_templateString, $this->_dataResolver));
-
         $toReplace = array();
         $toDelete = array();
-
 
         $highest = $this->_tokensList->getHighestPriorityForStage(POST_PARSE_TOKEN_STAGE);
         $lowest = $this->_tokensList->getLowestPriorityForStage(POST_PARSE_TOKEN_STAGE);
@@ -428,7 +422,7 @@ class Template implements IParser, IRenderer
             if ($found) break;
         }
 
-        $this->_templateString = $this->_dom->saveXML();
+        $this->_setTemplateString($this->_dom->saveXML());
 
         if ($this->_tokensList->hasTokenWithStage(POST_PARSE_TOKEN_STAGE)) {
             $this->_postParse();
@@ -437,7 +431,7 @@ class Template implements IParser, IRenderer
 
     private function _populateData()
     {
-        $this->_templateString = Utilities::populateData($this->_templateString, $this->_dataResolver);
+        $this->_setTemplateString(Utilities::populateData($this->_templateString, $this->_dataResolver));
         return $this->_templateString;
     }
 

@@ -73,7 +73,6 @@ class IfDirective extends BaseDirective
     public function process(): ?\DOMNode
     {
         $element = $this->getElement();
-        $element->removeAttributeNS(NamespacesRegistry::get("b:"), self::NAME);
 
         return $this->evaluate($this->template->getResolver())
             ? $element
