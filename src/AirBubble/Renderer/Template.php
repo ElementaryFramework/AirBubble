@@ -37,6 +37,7 @@ use DOMElement;
 use DOMImplementation;
 use DOMNode;
 use DOMXPath;
+use Error;
 use Exception;
 
 use ElementaryFramework\AirBubble\AirBubble;
@@ -52,6 +53,7 @@ use ElementaryFramework\AirBubble\Util\TemplateExtender;
 use ElementaryFramework\AirBubble\Util\Utilities;
 use ElementaryFramework\AirBubble\Util\DirectivesRegistry;
 use ElementaryFramework\AirBubble\Directives\BaseDirective;
+use ElementaryFramework\AirBubble\Exception\TemplateException;
 
 /**
  * Template file
@@ -124,6 +126,8 @@ class Template implements IParser, IRenderer
     {
         $this->setDataModel($model);
         try { $content = Utilities::processExpressions($content, $this->_dataResolver); }
+        catch (Error $e) { throw $e; }
+        catch (TemplateException $e) { throw $e; }
         catch (Exception $e) { }
         $this->_templateString = $this->_mergeWithParent($content);
     }
