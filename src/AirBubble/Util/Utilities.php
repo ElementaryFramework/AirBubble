@@ -110,6 +110,8 @@ class Utilities
             $path = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
                 return self::toString($resolver->resolve($m[1]));
             }, $path);
+
+            $path = static::processExpressions($path, $resolver);
         }
 
         $config = AirBubble::getConfiguration();
