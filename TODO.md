@@ -6,7 +6,7 @@
 * [x] Data binding
 * [ ] Functions (add more...)
 * [x] Base Data context
-* [ ] Extended Data context (auto call getters)
+* [x] Extended Data context (auto call getters)
 * [x] Query resolver
 * [x] DataTable
 * [x] SelectItemsList (KeyValuePair[])
@@ -18,3 +18,9 @@
 * [x] Fragment include
 * [x] Fragment extend
 * [x] Abstract templates
+* [x] Directives support
+* [x] If directive (b:if)
+* [ ] Elif directive (b:elif)
+* [ ] Else directive (b:else)
+* [ ] Repeat directive (b:repeat)
+* [ ] Context directive (b:context)
