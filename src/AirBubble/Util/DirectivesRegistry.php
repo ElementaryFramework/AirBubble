@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\AirBubble\Util;
 
+use ElementaryFramework\AirBubble\Directives\ElifDirective;
+use ElementaryFramework\AirBubble\Directives\ElseDirective;
 use ElementaryFramework\AirBubble\Directives\IfDirective;
 
 /**
@@ -57,7 +59,9 @@ abstract class DirectivesRegistry
      * @var array
      */
     private static $_registry = array(
-        "b:if" => IfDirective::class
+        "b:if" => IfDirective::class,
+        "b:elif" => ElifDirective::class,
+        "b:else" => ElseDirective::class
     );
 
     /**

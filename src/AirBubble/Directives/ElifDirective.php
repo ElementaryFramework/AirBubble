@@ -32,42 +32,26 @@
 
 namespace ElementaryFramework\AirBubble\Directives;
 
-use ElementaryFramework\AirBubble\Data\DataResolver;
-use ElementaryFramework\AirBubble\Util\Utilities;
-use ElementaryFramework\AirBubble\Util\EvalSandBox;
+use ElementaryFramework\AirBubble\Exception\ParseErrorException;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
- * If Directive
+ * Elif Directive
  *
- * Represent the <b>if</b> directive.
+ * Represent the <b>elif</b> directive.
  *
  * @category Attributes
  * @package  AirBubble
  * @author   Axel Nana <ax.lnana@outlook.com>
  * @license  MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
- * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Attributes/IfDirective
+ * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Attributes/ElifDirective
  */
-class IfDirective extends BaseDirective
+class ElifDirective extends IfDirective
 {
     /**
      * The name of this attribute;
      */
-    public const NAME = "if";
-
-    /**
-     * Evaluate the condition.
-     *
-     * @param DataResolver $resolver
-     *
-     * @return boolean
-     */
-    public function evaluate(DataResolver $resolver): bool
-    {
-        return EvalSandBox::eval(
-            Utilities::populateData($this->getValue(), $resolver),
-            $resolver
-        );
-    }
+    public const NAME = "elif";
 
     /**
      * Process the directive and return the
@@ -77,20 +61,34 @@ class IfDirective extends BaseDirective
      */
     public function process(): ?\DOMNode
     {
-        return $this->render();
-    }
-
-    /**
-     * Renders the node.
-     *
-     * @return \DOMNode|null
-     */
-    protected function render(): ?\DOMNode
-    {
         $element = $this->getElement();
 
-        return $this->evaluate($this->template->getResolver())
-            ? $element->cloneNode(true)
-            : null;
+        $node = $this->_getPreviousSiblingOf($element);
+
+        while ($node->hasAttributeNS(NamespacesRegistry::get("b:"), "elif")) {
+            $directive = new ElifDirective($node->getAttributeNodeNS(NamespacesRegistry::get("b:"), "elif"), $node, $this->document, $this->template);
+            if ($directive->process() === null) {
+                $node = $this->_getPreviousSiblingOf($node);
+            } else {
+                return null;
+            }
+        }
+
+        if ($node !== null && $node->hasAttributeNS(NamespacesRegistry::get("b:"), "if")) {
+            $directive = new IfDirective($node->getAttributeNodeNS(NamespacesRegistry::get("b:"), "if"), $node, $this->document, $this->template);
+            return ($directive->process() === null) ? $this->render() : null;
+        } else {
+            throw new ParseErrorException("b:elif directive used without a b:if on the previous node.");
+        }
+    }
+
+    private function _getPreviousSiblingOf(\DOMNode $node): ?\DOMNode
+    {
+        $previous = $node;
+        do {
+            $previous = $previous->previousSibling;
+            if ($previous === null) break;
+        } while ($previous->nodeType === XML_TEXT_NODE);
+        return $previous;
     }
 }

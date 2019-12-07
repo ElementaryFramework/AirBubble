@@ -32,65 +32,35 @@
 
 namespace ElementaryFramework\AirBubble\Directives;
 
-use ElementaryFramework\AirBubble\Data\DataResolver;
-use ElementaryFramework\AirBubble\Util\Utilities;
-use ElementaryFramework\AirBubble\Util\EvalSandBox;
+use ElementaryFramework\AirBubble\Exception\ParseErrorException;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
- * If Directive
+ * Else Directive
  *
- * Represent the <b>if</b> directive.
+ * Represent the <b>else</b> directive.
  *
  * @category Attributes
  * @package  AirBubble
  * @author   Axel Nana <ax.lnana@outlook.com>
  * @license  MIT <https://github.com/ElementaryFramework/AirBubble/blob/master/LICENSE>
- * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Attributes/IfDirective
+ * @link     http://bubble.na2axl.tk/docs/api/AirBubble/Attributes/ElseDirective
  */
-class IfDirective extends BaseDirective
+class ElseDirective extends ElifDirective
 {
     /**
      * The name of this attribute;
      */
-    public const NAME = "if";
+    public const NAME = "else";
 
     /**
-     * Evaluate the condition.
-     *
-     * @param DataResolver $resolver
-     *
-     * @return boolean
-     */
-    public function evaluate(DataResolver $resolver): bool
-    {
-        return EvalSandBox::eval(
-            Utilities::populateData($this->getValue(), $resolver),
-            $resolver
-        );
-    }
-
-    /**
-     * Process the directive and return the
-     * output node.
+     * Renders the node
      *
      * @return DOMNode|null
      */
-    public function process(): ?\DOMNode
-    {
-        return $this->render();
-    }
-
-    /**
-     * Renders the node.
-     *
-     * @return \DOMNode|null
-     */
-    protected function render(): ?\DOMNode
+    public function render(): ?\DOMNode
     {
         $element = $this->getElement();
-
-        return $this->evaluate($this->template->getResolver())
-            ? $element->cloneNode(true)
-            : null;
+        return $element->cloneNode(true);
     }
 }
