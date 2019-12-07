@@ -60,7 +60,7 @@ abstract class BaseDirective
      *
      * @var DOMDocument
      */
-    private $_domDocument;
+    protected $document;
 
     /**
      * The template in which the directive reside.
@@ -79,9 +79,9 @@ abstract class BaseDirective
     public function __construct(DOMAttr $attr, DOMElement &$element, DOMDocument &$document, Template &$template)
     {
         $this->_domAttr = $attr;
-        $this->_domElement = $element->cloneNode(true);
-        $this->_domDocument = $document;
-        $this->template = $template;
+        $this->_domElement = &$element;
+        $this->document = &$document;
+        $this->template = &$template;
     }
 
     /**
