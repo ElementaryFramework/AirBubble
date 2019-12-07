@@ -225,7 +225,6 @@ class Template implements IParser, IRenderer
                 list($ns, $attrName) = explode(':', $key);
                 if ($element->hasAttributeNS(NamespacesRegistry::get("{$ns}:"), $attrName)) {
                     $node = $element->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName);
-                    $element->removeAttributeNode($node);
 
                     /** @var BaseDirective $attr */
                     $attr = new $class(
@@ -241,6 +240,7 @@ class Template implements IParser, IRenderer
                         array_push($toDelete, $element);
                         break;
                     } else {
+                        $res->removeAttributeNode($res->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName));
                         array_push($toReplace, array($res, $element));
                     }
                 }
