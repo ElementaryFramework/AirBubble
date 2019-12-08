@@ -65,7 +65,7 @@ class ElifDirective extends IfDirective
 
         $node = $this->_getPreviousSiblingOf($element);
 
-        while ($node->hasAttributeNS(NamespacesRegistry::get("b:"), "elif")) {
+        while ($node !== null && $node->hasAttributeNS(NamespacesRegistry::get("b:"), "elif")) {
             $directive = new ElifDirective($node->getAttributeNodeNS(NamespacesRegistry::get("b:"), "elif"), $node, $this->document, $this->template);
             if ($directive->process() === null) {
                 $node = $this->_getPreviousSiblingOf($node);
@@ -76,9 +76,9 @@ class ElifDirective extends IfDirective
 
         if ($node !== null && $node->hasAttributeNS(NamespacesRegistry::get("b:"), "if")) {
             $directive = new IfDirective($node->getAttributeNodeNS(NamespacesRegistry::get("b:"), "if"), $node, $this->document, $this->template);
-            return ($directive->process() === null) ? $this->render() : null;
+            return ($directive->process() === null) ? $this->render(static::NAME) : null;
         } else {
-            throw new ParseErrorException("b:elif directive used without a b:if on the previous node.");
+            throw new ParseErrorException("b:elif directive used without b:if nor b:elif directives on previous nodes.");
         }
     }
 

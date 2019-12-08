@@ -35,6 +35,7 @@ namespace ElementaryFramework\AirBubble\Directives;
 use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Util\Utilities;
 use ElementaryFramework\AirBubble\Util\EvalSandBox;
+use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
  * If Directive
@@ -85,12 +86,13 @@ class IfDirective extends BaseDirective
      *
      * @return \DOMNode|null
      */
-    protected function render(): ?\DOMNode
+    protected function render(string $attr = "if"): ?\DOMNode
     {
-        $element = $this->getElement();
+        $element = $this->getElement()->cloneNode(true);
+        $element->removeAttributeNode($element->getAttributeNodeNS(NamespacesRegistry::get("b:"), $attr));
 
         return $this->evaluate($this->template->getResolver())
-            ? $element->cloneNode(true)
+            ? $element
             : null;
     }
 }

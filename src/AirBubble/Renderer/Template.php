@@ -147,7 +147,9 @@ class Template implements IParser, IRenderer
             $this->_preParse();
             $this->_applyDirectives($this->_dom->documentElement);
             $this->_populateData();
+            $this->_applyDirectives($this->_dom->documentElement);
             $this->_postParse();
+            $this->_applyDirectives($this->_dom->documentElement, true);
             $this->_parsed = true;
         }
     }
@@ -207,7 +209,7 @@ class Template implements IParser, IRenderer
         }
     }
 
-    private function _applyDirectives(?DOMElement $root)
+    private function _applyDirectives(?DOMElement $root, bool $critical = false)
     {
         if ($root === null)
             return;
@@ -219,10 +221,16 @@ class Template implements IParser, IRenderer
         foreach ($root->childNodes as $child) {
             if ($child instanceof \DOMText) continue;
 
-            $element = $this->_xPath->query($child->getNodePath())->item(0);
+            $originalElement = $this->_xPath->query($child->getNodePath())->item(0);
+            $element = $originalElement;
 
             foreach (DirectivesRegistry::registry() as $key => $class) {
                 list($ns, $attrName) = explode(':', $key);
+
+                if (array_key_exists($child->getNodePath(), $toReplace)) {
+                    $element = $toReplace[$child->getNodePath()];
+                }
+
                 if ($element->hasAttributeNS(NamespacesRegistry::get("{$ns}:"), $attrName)) {
                     $node = $element->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName);
 
@@ -234,30 +242,36 @@ class Template implements IParser, IRenderer
                         $this
                     );
 
-                    $res = $attr->process();
+                    try { $res = $attr->process(); }
+                    catch (Error $e) { throw $e; }
+                    catch (TemplateException $e) { throw $e; }
+                    catch (Exception $e) {
+                        if ($critical) throw $e;
+                        else continue;
+                    }
 
                     if ($res === null) {
-                        array_push($toDelete, $element);
+                        array_push($toDelete, $originalElement);
                         break;
                     } else {
-                        $res->removeAttributeNode($res->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName));
-                        array_push($toReplace, array($res, $element));
+                        $toReplace[$child->getNodePath()] = $res;
                     }
                 }
             }
 
-           if (!in_array($element, $toDelete) && $element->hasChildNodes())
-                $this->_applyDirectives($element);
+            if (!in_array($originalElement, $toDelete) && $element->hasChildNodes())
+                $this->_applyDirectives($element, $critical);
         }
 
-        foreach ($toReplace as $replacement) {
-            if ($replacement[0]->nodeName === "b:outputWrapper") {
-                foreach ($replacement[0]->childNodes as $child) {
-                    $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
+        foreach ($toReplace as $path => $replacement) {
+            $old = $this->_xPath->query($path)->item(0);
+            if ($replacement->nodeName === "b:outputWrapper") {
+                foreach ($replacement->childNodes as $child) {
+                    $old->parentNode->insertBefore($child->cloneNode(true), $old);
                 }
-                $replacement[1]->parentNode->removeChild($replacement[1]);
+                $old->parentNode->removeChild($old);
             } else {
-                $replacement[1]->parentNode->replaceChild($replacement[0], $replacement[1]);
+                $old->parentNode->replaceChild($this->_dom->importNode($replacement, true), $old);
             }
         }
 

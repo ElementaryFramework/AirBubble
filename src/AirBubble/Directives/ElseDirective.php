@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Directives;
 
+use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Exception\ParseErrorException;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
@@ -54,13 +55,14 @@ class ElseDirective extends ElifDirective
     public const NAME = "else";
 
     /**
-     * Renders the node
+     * Evaluate the condition.
      *
-     * @return DOMNode|null
+     * @param DataResolver $resolver
+     *
+     * @return boolean
      */
-    public function render(): ?\DOMNode
+    public function evaluate(DataResolver $resolver): bool
     {
-        $element = $this->getElement();
-        return $element->cloneNode(true);
+        return true;
     }
 }
