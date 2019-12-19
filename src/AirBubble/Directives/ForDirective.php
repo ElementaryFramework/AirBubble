@@ -110,6 +110,30 @@ class ForDirective extends BaseDirective
             }
         
             return $element;
+        } elseif (preg_match("/^([a-zA-Z0-9_]+) from (.+) to (.+)$/U", trim($directive), $m) != 0) {
+            $itemVar = $m[1];
+            $itemStart = intval(Utilities::evaluate($m[2], $this->template->getResolver()));
+            $itemEnd = intval(Utilities::evaluate($m[3], $this->template->getResolver()));
+
+            /** @var \DOMElement */
+            $toRepeat = $this->getElement()->cloneNode(true);
+            $toRepeat->removeAttributeNode($toRepeat->getAttributeNodeNS(NamespacesRegistry::get("b:"), static::NAME));
+
+            $innerHTML = $this->document->saveXML($toRepeat);
+
+            $domElement = $this->document->createElement("b:outputWrapper", "");
+    
+            if ($itemStart < $itemEnd) {
+                for ($i = $itemStart; $i <= $itemEnd; $i++) {
+                    Utilities::appendHTML($domElement, preg_replace("/\\\$\\{{$itemVar}\\}/U", $i, $innerHTML));
+                }
+            } else {
+                for ($i = $itemStart; $i >= $itemEnd; $i--) {
+                    Utilities::appendHTML($domElement, preg_replace("/\\\$\\{{$itemVar}\\}/U", $i, $innerHTML));
+                }
+            }
+    
+            return $domElement;
         } else {
             throw new ParseErrorException("The b:for directive contains a bad command.");
         }
