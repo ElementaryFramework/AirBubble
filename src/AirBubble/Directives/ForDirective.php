@@ -33,6 +33,7 @@
 namespace ElementaryFramework\AirBubble\Directives;
 
 use ElementaryFramework\AirBubble\Exception\ParseErrorException;
+use ElementaryFramework\AirBubble\Exception\TemplateException;
 use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 use ElementaryFramework\AirBubble\Util\Utilities;
@@ -64,6 +65,13 @@ class ForDirective extends BaseDirective
     public function process(): ?\DOMNode
     {
         $directive = $this->getValue();
+
+        if ($this->getElement()->hasAttributeNS(NamespacesRegistry::get("b:"), RepeatDirective::NAME)) {
+            throw new TemplateException(
+                "The b:repeat directive cannot be used with the b:for directive at the same time. " .
+                "Try to wrap your element with the <b:for> tag or the <b:foreach> tag instead."
+            );
+        }
 
         if (preg_match("/^(.+) in (.+)$/U", trim($directive), $m) != 0) {
             $key = null;

@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\AirBubble\Directives;
 
+use ElementaryFramework\AirBubble\Exception\TemplateException;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
 /**
@@ -69,6 +70,14 @@ class RepeatDirective extends BaseDirective
         $element = $this->document->createElement("b:outputWrapper", "");
         /** @var \DOMElement $repeat */
         $repeat = $this->getElement()->cloneNode(true);
+
+        if ($repeat->hasAttributeNS(NamespacesRegistry::get("b:"), ForDirective::NAME)) {
+            throw new TemplateException(
+                "The b:repeat directive cannot be used with the b:for directive at the same time. " .
+                "Try to wrap your element with the <b:for> tag or the <b:foreach> tag instead."
+            );
+        }
+
         $repeat->removeAttributeNode($repeat->getAttributeNodeNS(NamespacesRegistry::get("b:"), static::NAME));
         for ($i = 0; $i < $count; $i++) {
             $element->appendChild($repeat->cloneNode(true));
