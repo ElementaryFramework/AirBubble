@@ -61,11 +61,11 @@ abstract class DirectivesRegistry
      * @var array
      */
     private static $_registry = array(
+        "b:for" => ForDirective::class,
         "b:if" => IfDirective::class,
         "b:elif" => ElifDirective::class,
         "b:else" => ElseDirective::class,
         "b:repeat" => RepeatDirective::class,
-        "b:for" => ForDirective::class,
     );
 
     /**
