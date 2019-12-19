@@ -231,6 +231,15 @@ class Template implements IParser, IRenderer
                     $element = $toReplace[$child->getNodePath()];
                 }
 
+                if ($element === null) {
+                    if (!in_array($originalElement, $toDelete)) {
+                        array_push($toDelete, $originalElement);
+                        unset($toReplace[$child->getNodePath()]);
+                    }
+
+                    break;
+                }
+
                 if ($element->hasAttributeNS(NamespacesRegistry::get("{$ns}:"), $attrName)) {
                     $node = $element->getAttributeNodeNS(NamespacesRegistry::get("{$ns}:"), $attrName);
 
@@ -252,6 +261,7 @@ class Template implements IParser, IRenderer
 
                     if ($res === null) {
                         array_push($toDelete, $originalElement);
+                        unset($toReplace[$child->getNodePath()]);
                         break;
                     } else {
                         $toReplace[$child->getNodePath()] = $res;
@@ -267,7 +277,8 @@ class Template implements IParser, IRenderer
             $old = $this->_xPath->query($path)->item(0);
             if ($replacement->nodeName === "b:outputWrapper") {
                 foreach ($replacement->childNodes as $child) {
-                    $old->parentNode->insertBefore($child->cloneNode(true), $old);
+                    $child = $old->ownerDocument->importNode($child->cloneNode(true), true);
+                    $old->parentNode->insertBefore($child, $old);
                 }
                 $old->parentNode->removeChild($old);
             } else {
@@ -276,7 +287,8 @@ class Template implements IParser, IRenderer
         }
 
         foreach ($toDelete as $delete) {
-            $delete->parentNode->removeChild($delete);
+            if ($delete !== null)
+                $delete->parentNode->removeChild($delete);
         }
 
         $this->_setTemplateString($this->_dom->saveXML());
