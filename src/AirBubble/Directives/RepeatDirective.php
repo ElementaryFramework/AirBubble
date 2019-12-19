@@ -67,6 +67,7 @@ class RepeatDirective extends BaseDirective
         }
 
         $element = $this->document->createElement("b:outputWrapper", "");
+        /** @var \DOMElement $repeat */
         $repeat = $this->getElement()->cloneNode(true);
         $repeat->removeAttributeNode($repeat->getAttributeNodeNS(NamespacesRegistry::get("b:"), static::NAME));
         for ($i = 0; $i < $count; $i++) {

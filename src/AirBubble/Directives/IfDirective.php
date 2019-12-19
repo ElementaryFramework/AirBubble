@@ -88,6 +88,7 @@ class IfDirective extends BaseDirective
      */
     protected function render(string $attr = "if"): ?\DOMNode
     {
+        /** @var \DOMElement $element */
         $element = $this->getElement()->cloneNode(true);
         $element->removeAttributeNode($element->getAttributeNodeNS(NamespacesRegistry::get("b:"), $attr));
 

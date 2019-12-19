@@ -63,11 +63,13 @@ class ElifDirective extends IfDirective
     {
         $element = $this->getElement();
 
+        /** @var \DOMElement $node */
         $node = $this->_getPreviousSiblingOf($element);
 
         while ($node !== null && $node->hasAttributeNS(NamespacesRegistry::get("b:"), "elif")) {
             $directive = new ElifDirective($node->getAttributeNodeNS(NamespacesRegistry::get("b:"), "elif"), $node, $this->document, $this->template);
             if ($directive->process() === null) {
+                /** @var \DOMElement $node */
                 $node = $this->_getPreviousSiblingOf($node);
             } else {
                 return null;
