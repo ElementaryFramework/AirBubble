@@ -34,6 +34,7 @@ namespace ElementaryFramework\AirBubble\Util;
 
 use ElementaryFramework\AirBubble\Directives\ElifDirective;
 use ElementaryFramework\AirBubble\Directives\ElseDirective;
+use ElementaryFramework\AirBubble\Directives\ForDirective;
 use ElementaryFramework\AirBubble\Directives\IfDirective;
 use ElementaryFramework\AirBubble\Directives\RepeatDirective;
 
@@ -63,7 +64,8 @@ abstract class DirectivesRegistry
         "b:if" => IfDirective::class,
         "b:elif" => ElifDirective::class,
         "b:else" => ElseDirective::class,
-        "b:repeat" => RepeatDirective::class
+        "b:repeat" => RepeatDirective::class,
+        "b:for" => ForDirective::class,
     );
 
     /**
