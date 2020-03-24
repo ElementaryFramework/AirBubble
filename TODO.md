@@ -6,7 +6,7 @@
 * [x] Data binding
 * [ ] Functions (add more...)
 * [x] Base Data context
-* [ ] Extended Data context (auto call getters)
+* [x] Extended Data context (auto call getters)
 * [x] Query resolver
 * [x] DataTable
 * [x] SelectItemsList (KeyValuePair[])
