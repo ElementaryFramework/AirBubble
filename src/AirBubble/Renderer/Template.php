@@ -125,10 +125,14 @@ class Template implements IParser, IRenderer
     private function __construct(string $content, DataModel $model)
     {
         $this->setDataModel($model);
-        try { $content = Utilities::processExpressions($content, $this->_dataResolver); }
-        catch (Error $e) { throw $e; }
-        catch (TemplateException $e) { throw $e; }
-        catch (Exception $e) { }
+        try {
+            $content = Utilities::processExpressions($content, $this->_dataResolver);
+        } catch (Error $e) {
+            throw $e;
+        } catch (TemplateException $e) {
+            throw $e;
+        } catch (Exception $e) {
+        }
         $this->_setTemplateString($this->_mergeWithParent($content));
     }
 
@@ -178,8 +182,10 @@ class Template implements IParser, IRenderer
 
         if (AirBubble::getConfiguration()->isIndentOutput()) {
             $indenter = new OutputIndenter();
-            try { $output = $indenter->indent($output); }
-            catch (Exception $e) { }
+            try {
+                $output = $indenter->indent($output);
+            } catch (Exception $e) {
+            }
         }
 
         return $output;
@@ -251,10 +257,13 @@ class Template implements IParser, IRenderer
                         $this
                     );
 
-                    try { $res = $attr->process(); }
-                    catch (Error $e) { throw $e; }
-                    catch (TemplateException $e) { throw $e; }
-                    catch (Exception $e) {
+                    try {
+                        $res = $attr->process();
+                    } catch (Error $e) {
+                        throw $e;
+                    } catch (TemplateException $e) {
+                        throw $e;
+                    } catch (Exception $e) {
                         if ($critical) throw $e;
                         else continue;
                     }
@@ -465,7 +474,7 @@ class Template implements IParser, IRenderer
     {
         if (TemplateExtender::isExtender($content)) {
             $parent = TemplateExtender::getParentTemplate($content, $this->_dataResolver);
-            $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content));
+            $content = $this->_mergeWithParent(TemplateExtender::merge($parent, $content, $this->_dataResolver));
         }
 
         return $content;
