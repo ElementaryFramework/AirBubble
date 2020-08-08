@@ -96,11 +96,23 @@ class DataModel
      */
     public function get(string $key): KeyValuePair
     {
-        if (array_key_exists($key, $this->_data)) {
+        if ($this->has($key)) {
             return $this->_data[$key];
         }
 
         throw new InvalidQueryException($key);
+    }
+
+    /**
+     * Checks if the given key exists in the current data model.
+     *
+     * @param string $key The key of the data.
+     *
+     * @return boolean
+     */
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->_data);
     }
 
     /**
