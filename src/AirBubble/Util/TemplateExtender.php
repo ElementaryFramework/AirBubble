@@ -32,7 +32,6 @@
 
 namespace ElementaryFramework\AirBubble\Util;
 
-use ElementaryFramework\AirBubble\Renderer\Template;
 use ElementaryFramework\AirBubble\Data\DataResolver;
 use ElementaryFramework\AirBubble\Util\NamespacesRegistry;
 
@@ -84,12 +83,21 @@ class TemplateExtender
         return $blocks;
     }
 
-    public static function merge(string $parent, string $child): string
+    public static function merge(string $parent, string $child, DataResolver $resolver): string
     {
-        $blocks = self::getTemplateBlocks($child);
+        $domC = Utilities::createDOMFromString($child);
+        $model = &$resolver->getModel();
+        foreach ($domC->documentElement->attributes as $attribute) {
+            if ($attribute instanceof \DOMAttr && !$model->has($attribute->name)) {
+                $model->set($attribute->name, $attribute->value);
+            }
+        }
+
+        $parent = Utilities::populateData($parent, $resolver);
 
         $domP = Utilities::createDOMFromString($parent);
 
+        $blocks = self::getTemplateBlocks($child);
         self::_processReplaces($domP, $blocks);
 
         return $domP->saveXML();
