@@ -77,6 +77,16 @@ class DataResolver
     }
 
     /**
+     * Gets the data model associated to this resolver.
+     *
+     * @return DataModel
+     */
+    public function &getModel(): DataModel
+    {
+        return $this->_model;
+    }
+
+    /**
      * Gets the data from.
      *
      * @param string $query
@@ -134,7 +144,7 @@ class DataResolver
                         preg_match("#(\\w+)\\((.+)\\)#isU", $part, $matches);
                         $isMethodCall = count($matches) > 0;
                         if ($isMethodCall) {
-                            $params = array_map(function($item) {
+                            $params = array_map(function ($item) {
                                 return trim($item, "\"' ");
                             }, explode(",", $matches[2]));
                             $part = $matches[1];
