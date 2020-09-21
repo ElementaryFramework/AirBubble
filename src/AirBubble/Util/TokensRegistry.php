@@ -38,6 +38,7 @@ use ElementaryFramework\AirBubble\Tokens\ConditionToken;
 use ElementaryFramework\AirBubble\Tokens\DataTableToken;
 use ElementaryFramework\AirBubble\Tokens\ForeachToken;
 use ElementaryFramework\AirBubble\Tokens\ForToken;
+use ElementaryFramework\AirBubble\Tokens\FragmentToken;
 use ElementaryFramework\AirBubble\Tokens\IncludeToken;
 use ElementaryFramework\AirBubble\Tokens\InputLabelToken;
 use ElementaryFramework\AirBubble\Tokens\SelectItemsToken;
@@ -75,7 +76,8 @@ abstract class TokensRegistry
         "b:dataTable" => DataTableToken::class,
         "b:selectItems" => SelectItemsToken::class,
         "b:for" => ForToken::class,
-        "b:block" => BlockToken::class
+        "b:block" => BlockToken::class,
+        "b:fragment" => FragmentToken::class,
     );
 
     /**
