@@ -155,7 +155,7 @@ class ForeachToken extends BaseToken
 
         $innerHTML = Utilities::innerHTML($this->_element);
 
-        $domElement = $this->_document->createElement("b:outputWrapper", "");
+        $domElement = $this->_document->createElement("b:fragment", "");
 
         $charsFilter = Template::DATA_MODEL_QUERY_CHARS_FILTER;
 

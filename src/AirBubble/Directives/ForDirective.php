@@ -69,7 +69,7 @@ class ForDirective extends BaseDirective
         if ($this->getElement()->hasAttributeNS(NamespacesRegistry::get("b:"), RepeatDirective::NAME)) {
             throw new TemplateException(
                 "The b:repeat directive cannot be used with the b:for directive at the same time. " .
-                "Try to wrap your element with the <b:for> tag or the <b:foreach> tag instead."
+                    "Try to wrap your element with the <b:for> tag or the <b:foreach> tag instead."
             );
         }
 
@@ -91,7 +91,7 @@ class ForDirective extends BaseDirective
 
             $iterator = $this->template->getResolver()->resolve($it[1]);
 
-            $element = $this->document->createElement("b:outputWrapper", "");
+            $element = $this->document->createElement("b:fragment", "");
 
             /** @var \DOMElement */
             $toRepeat = $this->getElement()->cloneNode(true);
@@ -109,14 +109,14 @@ class ForDirective extends BaseDirective
                     },
                     $innerHTML
                 );
-        
+
                 if ($key !== null) {
                     $iterationHTML = preg_replace("/\\\$\\{{$key}\\}/U", $k, $iterationHTML);
                 }
-    
+
                 Utilities::appendHTML($element, $iterationHTML);
             }
-        
+
             return $element;
         } elseif (preg_match("/^([a-zA-Z0-9_]+) from (.+) to (.+)$/U", trim($directive), $m) != 0) {
             $itemVar = $m[1];
@@ -129,8 +129,8 @@ class ForDirective extends BaseDirective
 
             $innerHTML = $this->document->saveXML($toRepeat);
 
-            $domElement = $this->document->createElement("b:outputWrapper", "");
-    
+            $domElement = $this->document->createElement("b:fragment", "");
+
             if ($itemStart < $itemEnd) {
                 for ($i = $itemStart; $i <= $itemEnd; $i++) {
                     Utilities::appendHTML($domElement, preg_replace("/\\\$\\{{$itemVar}\\}/U", $i, $innerHTML));
@@ -140,7 +140,7 @@ class ForDirective extends BaseDirective
                     Utilities::appendHTML($domElement, preg_replace("/\\\$\\{{$itemVar}\\}/U", $i, $innerHTML));
                 }
             }
-    
+
             return $domElement;
         } else {
             throw new ParseErrorException("The b:for directive contains a bad command.");

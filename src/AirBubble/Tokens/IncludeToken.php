@@ -154,7 +154,7 @@ class IncludeToken extends BaseToken
 
         $includeString = Utilities::innerHTML($includeDOM);
 
-        $domElement = $this->_document->createElement("b:outputWrapper", "");
+        $domElement = $this->_document->createElement("b:fragment", "");
 
         Utilities::appendHTML($domElement, $includeString);
 

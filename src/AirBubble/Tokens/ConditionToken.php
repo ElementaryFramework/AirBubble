@@ -222,7 +222,7 @@ class ConditionToken extends BaseToken
 
         if ($resultPath !== null) {
             $statement = $xPath->query($resultPath)->item(0);
-            $domElement = $this->_document->createElement("b:outputWrapper", "");
+            $domElement = $this->_document->createElement("b:fragment", "");
             Utilities::appendHTML($domElement, Utilities::innerHTML($statement));
         }
 

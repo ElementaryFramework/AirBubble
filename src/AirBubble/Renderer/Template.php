@@ -284,7 +284,7 @@ class Template implements IParser, IRenderer
 
         foreach ($toReplace as $path => $replacement) {
             $old = $this->_xPath->query($path)->item(0);
-            if ($replacement->nodeName === "b:outputWrapper") {
+            if ($replacement->nodeName === "b:fragment") {
                 foreach ($replacement->childNodes as $child) {
                     $child = $old->ownerDocument->importNode($child->cloneNode(true), true);
                     $old->parentNode->insertBefore($child, $old);
@@ -333,7 +333,7 @@ class Template implements IParser, IRenderer
             }
 
             foreach ($toReplace as $replacement) {
-                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                if ($replacement[0]->nodeName === "b:fragment") {
                     foreach ($replacement[0]->childNodes as $child) {
                         $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
                     }
@@ -387,7 +387,7 @@ class Template implements IParser, IRenderer
             }
 
             foreach ($toReplace as $replacement) {
-                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                if ($replacement[0]->nodeName === "b:fragment") {
                     foreach ($replacement[0]->childNodes as $child) {
                         $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
                     }
@@ -440,7 +440,7 @@ class Template implements IParser, IRenderer
             }
 
             foreach ($toReplace as $replacement) {
-                if ($replacement[0]->nodeName === "b:outputWrapper") {
+                if ($replacement[0]->nodeName === "b:fragment") {
                     foreach ($replacement[0]->childNodes as $child) {
                         $replacement[1]->parentNode->insertBefore($child->cloneNode(true), $replacement[1]);
                     }

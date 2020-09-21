@@ -144,7 +144,7 @@ class ForToken extends BaseToken
 
         $innerHTML = Utilities::innerHTML($this->_element);
 
-        $domElement = $this->_document->createElement("b:outputWrapper", "");
+        $domElement = $this->_document->createElement("b:fragment", "");
 
         if ($itemStart < $itemEnd) {
             for ($i = $itemStart; $i <= $itemEnd; $i++) {
