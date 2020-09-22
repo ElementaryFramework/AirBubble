@@ -73,7 +73,9 @@ class Template implements IParser, IRenderer
 
     public const DATA_MODEL_QUERY_REGEX = "/\\\$\\{(" . self::DATA_MODEL_QUERY_CHARS_FILTER . "+)\\}/U";
 
-    public const EXPRESSION_REGEX = "/\\{\\{(.+)\\}\\}/U";
+    public const EXPRESSION_REGEX_FILTER = "\\{\\{(.+)\\}\\}";
+
+    public const EXPRESSION_REGEX = "/" . self::EXPRESSION_REGEX_FILTER . "/U";
 
     private $_templateString;
 

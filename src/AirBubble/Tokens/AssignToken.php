@@ -154,7 +154,7 @@ class AssignToken extends BaseToken
             if ($attr instanceof VarAttribute) {
                 $var = $attr->getValue();
             } elseif ($attr instanceof ValueAttribute) {
-                $value = Utilities::populateData($attr->getValue(), $resolver);
+                $value = Utilities::populateData($attr->getValue(), $resolver, false);
             }
         }
 

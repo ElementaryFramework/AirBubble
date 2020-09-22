@@ -120,23 +120,33 @@ class Utilities
         return file_exists($path) ? $path : realpath($config->getTemplatesBasePath() . DIRECTORY_SEPARATOR . $path);
     }
 
-    public static function processExpressions(string $templatePart, DataResolver $resolver)
+    public static function processExpressions(string $templatePart, DataResolver $resolver, bool $stringify = true)
     {
-        $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) use ($resolver) {
+        // Returns the raw value if we don't want to stringify and the $templatePart is a full expression
+        if (!$stringify && preg_match("/^" . Template::EXPRESSION_REGEX_FILTER . "$/U", $templatePart, $m) === 1) {
+            return EvalSandBox::eval($m[1], $resolver);
+        }
+
+        $templatePart = preg_replace_callback(Template::EXPRESSION_REGEX, function ($m) use ($resolver, $stringify) {
             $res = EvalSandBox::eval($m[1], $resolver);
-            return self::toString($res);
+            return $stringify ? self::toString($res) : $res;
         }, $templatePart);
 
         return $templatePart;
     }
 
-    public static function populateData(string $templatePart, DataResolver $resolver)
+    public static function populateData(string $templatePart, DataResolver $resolver, bool $stringify = true)
     {
-        $templatePart = self::processExpressions($templatePart, $resolver);
+        $templatePart = self::processExpressions($templatePart, $resolver, $stringify);
+
+        // If we have a value other than a string without stringified it, return it.
+        if (!$stringify && !is_string($templatePart)) {
+            return $templatePart;
+        }
 
         do {
-            $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver) {
-                return self::toString($resolver->resolve($m[1]));
+            $templatePart = preg_replace_callback(Template::DATA_MODEL_QUERY_REGEX, function ($m) use ($resolver, $stringify) {
+                return $stringify ? self::toString($resolver->resolve($m[1])) : $resolver->resolve($m[1]);
             }, $templatePart);
         } while (preg_match(Template::DATA_MODEL_QUERY_REGEX, $templatePart, $matches));
 
@@ -187,8 +197,7 @@ class Utilities
     {
         if (preg_match(Template::EXPRESSION_REGEX, $query, $a)) {
             $query = self::populateData($query, $resolver);
-        }
-        elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $query, $a)) {
+        } elseif (preg_match(Template::DATA_MODEL_QUERY_REGEX, $query, $a)) {
             $query = preg_replace(Template::DATA_MODEL_QUERY_REGEX, "$1", $query);
             $query = $resolver->resolve($query);
         }
