@@ -92,7 +92,7 @@ class AssignToken extends BaseToken
                         break;
 
                     default:
-                        throw new UnexpectedTokenException("The attribute \"{$attr->nodename}\" is not supported for this tag.");
+                        throw new UnexpectedTokenException("The attribute \"{$attr->nodeName}\" is not supported for this tag.");
                 }
             }
         }
